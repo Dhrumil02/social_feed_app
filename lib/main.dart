@@ -5,5 +5,3 @@ void main() async {
 
   runApp(const FeedApp());
 }
-
-
