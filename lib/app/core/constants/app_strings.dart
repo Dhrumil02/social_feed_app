@@ -1,7 +1,56 @@
 class AppStrings{
-  static String login = "";
-  static String register = "";
-  static String signUpWithMobile = "";
+  static const login = "Login";
+  static const signup = "Sign Up";
+  static const logout = "Logout";
+  static const email = "Email";
+  static const password = "Password";
+  static const confirmPassword = "Confirm Password";
+  static const phone = "Mobile Number";
+  static const forgotPassword = "Forgot Password?";
+  static const resetPassword = "Reset Password";
+  static const createAccount = "Create Account";
+  static const orContinueWith = "Or continue with";
+  static const signInWithMobile = "Sign in with Mobile Number";
+  static const googleSignIn = "Sign in with Google";
+  static const appleSignIn = "Sign in with Apple";
 
+  static const home = "Home";
+  static const feed = "Feed";
+  static const posts = "Posts";
+  static const noPosts = "No posts yet";
+  static const newPost = "New Post";
+  static const writeCaption = "Write a caption...";
+  static const uploadImage = "Upload Image";
+  static const post = "Post";
+  static const posting = "Posting...";
+  static const like = "Like";
+  static const unlike = "Unlike";
+  static const comment = "Comment";
+  static const comments = "Comments";
+  static const likes = "likes";
+  static const viewAllComments = "View all comments";
+
+  static const profile = "Profile";
+  static const editProfile = "Edit Profile";
+  static const followers = "Followers";
+  static const bio = "Bio";
+  static const save = "Save";
+  static const cancel = "Cancel";
+  static const settings = "Settings";
+
+  static const required = 'This field is required';
+  static const minLength = 'Input is too short';
+  static const maxLength = 'Input is too long';
+  static const emailRequired = 'Email is required';
+  static const invalidEmail = 'Please enter a valid email address';
+  static const passwordRequired = 'Password is required';
+  static const passwordTooShort = 'Password must be at least 6 characters';
+  static const confirmPasswordRequired = 'Confirm password is required';
+  static const passwordMismatch = 'Passwords do not match';
+  static const phoneRequired = 'Phone number is required';
+  static const invalidPhone = 'Please enter a valid phone number';
+  static const requiredField = "This field is required";
+  static const somethingWentWrong = "Something went wrong. Please try again.";
+  static const noInternet = "No internet connection";
 
 }
