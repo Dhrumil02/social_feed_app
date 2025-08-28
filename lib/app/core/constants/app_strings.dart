@@ -52,5 +52,8 @@ class AppStrings{
   static const requiredField = "This field is required";
   static const somethingWentWrong = "Something went wrong. Please try again.";
   static const noInternet = "No internet connection";
-
+  static const selectImage = 'Please select an image';
+  static const tapToSelectImage = 'Tap to select an image';
+  static const photoLibrary = 'Photo Library';
+  static const camera = 'Camera';
 }

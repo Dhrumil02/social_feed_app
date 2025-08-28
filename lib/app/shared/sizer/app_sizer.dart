@@ -44,4 +44,7 @@ class AppSizer {
     return fontSize * scaleFactor;
   }
 
+  static bool get isMobile => deviceType == DeviceType.mobile;
+  static bool get isTablet => deviceType == DeviceType.tablet;
+
 }

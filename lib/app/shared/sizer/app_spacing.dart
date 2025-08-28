@@ -7,6 +7,7 @@ class Spacing {
   static EdgeInsets y(double value) =>
       EdgeInsets.symmetric(vertical: value);
 
+
   static EdgeInsets all(double value) =>
       EdgeInsets.all(value);
 

@@ -1,6 +1,7 @@
 class AppImages{
-  static String assets ="assets/";
-  static String images ="$assets/images/";
-  static String icons ="$assets/icons/";
+  static final String _assets ="assets/";
+  static final String _images ="$_assets/images/";
+  static final String _icons ="$_assets/icons/";
 
+  static String imgSplash = "$_images/img_splash_screen.png";
 }
