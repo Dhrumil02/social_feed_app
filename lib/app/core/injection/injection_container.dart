@@ -79,11 +79,11 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetCommentsUseCase(sl()));
   sl.registerLazySingleton(() => DeleteCommentUseCase(sl()));
   sl.registerLazySingleton<FeedLocalDataSource>(
-        () => FeedLocalDataSourceImpl(),
+    () => FeedLocalDataSourceImpl(),
   );
 
   sl.registerLazySingleton<FeedRepository>(
-    () => FeedRepositoryImpl(remoteDataSource: sl(),localDataSource: sl()),
+    () => FeedRepositoryImpl(remoteDataSource: sl(), localDataSource: sl()),
   );
 
   sl.registerLazySingleton<FeedRemoteDataSource>(

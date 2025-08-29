@@ -5,6 +5,9 @@ class AppStrings{
   static const logout = "Logout";
   static const email = "Email";
   static const fullName = "Full Name";
+  static const select = "Select";
+  static const cancel = "Cancel";
+  static const selectColor = "Select Color";
   static const enterFullName = "Enter Full Name";
   static const password = "Password";
   static const continueWithGoogle = "Sign-In With Google";
@@ -65,7 +68,6 @@ class AppStrings{
   static const followers = "Followers";
   static const bio = "Bio";
   static const save = "Save";
-  static const cancel = "Cancel";
   static const noPostYet = "No posts yet";
   static const unknownUser = "Unknown User";
   static const settings = "Settings";

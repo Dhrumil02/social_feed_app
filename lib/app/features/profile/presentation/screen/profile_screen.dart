@@ -1,4 +1,5 @@
 import 'package:feed_app/app/export.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -13,20 +14,30 @@ class ProfileScreen extends StatelessWidget {
           AppStrings.profile,
           style: context.headlineMedium.bold.copyWith(color: Colors.white),
         ),
-        leading: BlocBuilder<ThemeCubit, ThemeData>(
+        leadingWidth: 120,
+        leading:             BlocBuilder<ThemeCubit, ThemeData>(
           builder: (ctx, state) {
             final theme = context.watch<ThemeCubit>().state;
 
             final isDark = theme.brightness == Brightness.dark;
 
-            return IconButton(
-              onPressed: () {
-                context.read<ThemeCubit>().toggleTheme(!isDark);
-              },
-              icon: Icon(isDark ? Icons.sunny : Icons.dark_mode),
+            return Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    context.read<ThemeCubit>().toggleTheme(!isDark);
+                  },
+                  icon: Icon(isDark ? Icons.sunny : Icons.dark_mode),
+                ),
+                AppSizes.hGap8,
+                IconButton(onPressed: (){
+                  _showColorPickerDialog(context,isDark);
+                }, icon: Icon(Icons.format_paint_outlined)),
+              ],
             );
           },
-        ),
+        )
+        ,
         actions: [
           IconButton(
             onPressed: () => _showLogoutDialog(context),
@@ -155,21 +166,10 @@ class ProfileScreen extends StatelessWidget {
       final authService = sl<AuthenticationService>();
       final sharedPrefService = sl<SharedPreferenceService>();
 
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(child: CircularProgressIndicator()),
-      );
-
+      context.go(AppRoutes.signIn);
       await authService.signOut();
 
       await sharedPrefService.clearUserData();
-
-      if (context.mounted) {
-        Navigator.pop(context);
-
-        context.go(AppRoutes.signIn);
-      }
     } catch (e) {
       if (context.mounted) {
         Navigator.pop(context);
@@ -182,5 +182,41 @@ class ProfileScreen extends StatelessWidget {
         );
       }
     }
+  }
+
+  void _showColorPickerDialog(BuildContext context,isDark) {
+    Color selectedColor = Theme.of(context).primaryColor;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: CustomText(AppStrings.selectColor),
+          content: SingleChildScrollView(
+            child: BlockPicker(
+              pickerColor: selectedColor,
+              onColorChanged: (color) {
+                selectedColor = color;
+              },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: CustomText(AppStrings.cancel),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: CustomText(AppStrings.select),
+              onPressed: () {
+                context.read<ThemeCubit>().updateTheme(selectedColor, isDark);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

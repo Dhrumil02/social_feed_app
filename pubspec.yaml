@@ -49,10 +49,16 @@ dependencies:
 
   #sign in
   google_sign_in: ^6.3.0
-  go_router: ^16.2.0
   sign_in_with_apple: ^7.0.1
-  firebase_app_check: ^0.4.0
-  recaptcha_enterprise_flutter: ^18.7.1
+
+  #
+  flutter_colorpicker: ^1.1.0
+
+  #routes
+  go_router: ^16.2.0
+
+
+
 
   #path
   path: ^1.9.1

@@ -46,10 +46,13 @@ class AuthenticationService {
           await _auth.signInWithCredential(credential);
           completer.complete();
         } catch (e) {
+          print('FIrebase Auth Exception111 ${e}');
+
           completer.completeError(e);
         }
       },
       verificationFailed: (FirebaseAuthException e) {
+        print('FIrebase Auth Exception $e');
         completer.completeError(e);
       },
       codeSent: (String verificationId, int? resendToken) {

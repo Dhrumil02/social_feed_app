@@ -39,7 +39,7 @@ class CustomTextField extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: Spacing.y(AppSizes.s1),
-      height: height ?? AppSizes.s40,
+      height: height ?? AppSizes.s48,
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
@@ -56,7 +56,7 @@ class CustomTextField extends StatelessWidget {
           hintText: hintText,
           suffixIcon: suffixIcon,
           prefixIcon: prefixIcon,
-          contentPadding: Spacing.all(AppSizes.s4),
+          contentPadding: EdgeInsets.fromLTRB(16,4,8,4),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.s4),
           ),

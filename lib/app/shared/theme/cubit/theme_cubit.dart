@@ -9,6 +9,12 @@ class ThemeCubit extends Cubit<ThemeData> {
         primaryColor: color,
         primarySwatch: AppColors.createMaterialColor(color),
         brightness: isDarkMode ? Brightness.dark : Brightness.light,
+        appBarTheme:  AppBarTheme(
+          backgroundColor: color,
+          foregroundColor: Colors.white,
+          centerTitle: true,
+          elevation: 0,
+        ),
       ),
     );
   }

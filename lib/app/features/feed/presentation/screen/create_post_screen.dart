@@ -33,7 +33,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText(AppStrings.createPost),
+        title:  CustomText(AppStrings.createPost,style: context.headlineMedium.copyWith(color: Colors.white),),
         leading: BackButton(
           onPressed: () {
             context.pop();
@@ -218,71 +218,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               ),
               onChanged: (_) => setState(() {}),
             ),
-
-            AppSizes.vGap24,
-
-            if (_selectedImage != null || _captionController.text.isNotEmpty)
-              Container(
-                padding: Spacing.all(AppSizes.s12),
-                decoration: BoxDecoration(
-                  color:
-                      _selectedImage != null &&
-                          _captionController.text.trim().isNotEmpty
-                      ? Colors.green[50]
-                      : Colors.orange[50],
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color:
-                        _selectedImage != null &&
-                            _captionController.text.trim().isNotEmpty
-                        ? Colors.green[200]!
-                        : Colors.orange[200]!,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      _selectedImage != null &&
-                              _captionController.text.trim().isNotEmpty
-                          ? Icons.check_circle_outline
-                          : Icons.info_outline,
-                      color:
-                          _selectedImage != null &&
-                              _captionController.text.trim().isNotEmpty
-                          ? Colors.green[700]
-                          : Colors.orange[700],
-                    ),
-                    AppSizes.vGap8,
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomText(
-                            _selectedImage != null &&
-                                    _captionController.text.trim().isNotEmpty
-                                ? 'Ready to share!'
-                                : 'Complete your post',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: AppSizes.s14,
-                              color:
-                                  _selectedImage != null &&
-                                      _captionController.text.trim().isNotEmpty
-                                  ? Colors.green[700]
-                                  : Colors.orange[700],
-                            ),
-                          ),
-                          AppSizes.vGap16,
-                          CustomText(
-                            _getStatusMessage(),
-                            style: context.bodySmall,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
 
             AppSizes.vGap16,
           ],
