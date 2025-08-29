@@ -1,27 +1,95 @@
-import 'package:feed_app/app/export.dart';
-import 'package:get_it/get_it.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:feed_app/app/core/services/authentication_service.dart';
+import 'package:feed_app/app/core/services/firebase_database_service.dart';
+import 'package:feed_app/app/core/services/shared_preference_service.dart';
+import 'package:feed_app/app/export.dart';
+import 'package:feed_app/app/features/auth/data/repository/auth_repository_impl.dart';
+import 'package:feed_app/app/features/auth/domain/repository/auth_repository.dart';
+import 'package:feed_app/app/features/auth/domain/usercase/auth_use_case.dart';
+import 'package:feed_app/app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:feed_app/app/features/bottom_nav/presentation/bloc/bottom_nav_bloc.dart';
+import 'package:feed_app/app/shared/theme/cubit/theme_cubit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../network/network_info.dart';
 
 final sl = GetIt.instance;
 
-GlobalKey<NavigatorState> get navigatorKey => sl.get<GlobalKey<NavigatorState>>();
+GlobalKey<NavigatorState> get navigatorKey =>
+    sl.get<GlobalKey<NavigatorState>>();
 
 Future<void> init() async {
   final sharedPreferences = await SharedPreferences.getInstance();
+  await Hive.initFlutter();
   await Hive.openBox('feedApp');
-
+  sl.registerLazySingleton(() => GlobalKey<NavigatorState>());
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
   sl.registerLazySingleton(() => FirebaseStorage.instance);
   sl.registerLazySingleton(() => Connectivity());
   sl.registerLazySingleton(() => sharedPreferences);
   sl.registerLazySingleton(() => Hive.box('feedApp'));
+  sl.registerLazySingleton<ThemeCubit>(() => ThemeCubit());
+  sl.registerLazySingleton<BottomNavBloc>(() => BottomNavBloc());
 
+  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
 
+  sl.registerLazySingleton(() => SharedPreferenceService());
+  sl.registerLazySingleton(() => AuthenticationService());
+  sl.registerLazySingleton(() => FirebaseDatabaseService());
+
+  /*
+  sl.registerLazySingleton<AuthLocalDataSource>(
+        () => AuthLocalDataSourceImpl(sl()),
+  );
+  sl.registerLazySingleton<AuthRemoteDataSource>(
+        () => AuthRemoteDataSourceImpl(sl(), sl(), sl(), sl()),
+  );
+*/
+
+  // Repository
+  sl.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(
+      authService: sl(),
+      databaseService: sl(),
+      networkInfo: sl(),
+      sharedPrefService: sl(),
+    ),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => SignUpWithEmailUseCase(sl()));
+  sl.registerLazySingleton(() => SignInWithEmailUseCase(sl()));
+  sl.registerLazySingleton(() => SendOTPUseCase(sl()));
+  sl.registerLazySingleton(() => VerifyOTPUseCase(sl()));
+  sl.registerLazySingleton(() => SignInWithGoogleUseCase(sl()));
+  sl.registerLazySingleton(() => SignInWithAppleUseCase(sl()));
+  sl.registerLazySingleton(() => SignOutUseCase(sl()));
+  sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateUserProfileUseCase(sl()));
+  sl.registerLazySingleton(() => SendPasswordResetEmailUseCase(sl()));
+  sl.registerLazySingleton(() => IsUserLoggedInUseCase(sl()));
+
+  // Bloc
+  sl.registerFactory(
+    () => AuthBloc(
+      signUpWithEmailUseCase: sl(),
+      signInWithEmailUseCase: sl(),
+      sendOTPUseCase: sl(),
+      verifyOTPUseCase: sl(),
+      signInWithGoogleUseCase: sl(),
+      signInWithAppleUseCase: sl(),
+      signOutUseCase: sl(),
+      getCurrentUserUseCase: sl(),
+      updateUserProfileUseCase: sl(),
+      sendPasswordResetEmailUseCase: sl(),
+      isUserLoggedInUseCase: sl(),
+    ),
+  );
 }

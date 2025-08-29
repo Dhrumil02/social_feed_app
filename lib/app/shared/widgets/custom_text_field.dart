@@ -9,6 +9,7 @@ class CustomTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final int? maxLines;
   final int? maxLength;
+  final double? height;
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   final bool enabled;
@@ -23,6 +24,7 @@ class CustomTextField extends StatelessWidget {
     this.obscureText = false,
     this.keyboardType,
     this.validator,
+    this.height,
     this.maxLines = 1,
     this.maxLength,
     this.suffixIcon,
@@ -37,6 +39,7 @@ class CustomTextField extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: Spacing.y(AppSizes.s1),
+      height: height ?? 40,
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
@@ -47,7 +50,7 @@ class CustomTextField extends StatelessWidget {
         enabled: enabled,
         readOnly: readOnly,
         onTap: onTap,
-        style: TextStyle(fontSize: AppSizes.s16.sp),
+        style: TextStyle(fontSize: AppSizes.s16),
         decoration: InputDecoration(
           labelText: labelText,
           hintText: hintText,

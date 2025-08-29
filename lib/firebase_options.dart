@@ -63,7 +63,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '950341969594',
     projectId: 'feed-app-c0506',
     storageBucket: 'feed-app-c0506.firebasestorage.app',
+    androidClientId: '950341969594-9c4bdq32tohi97a4ruh245bn8knd5jr4.apps.googleusercontent.com',
     iosClientId: '950341969594-dsuel7q4dcc6j30300enae66ui4t8e8q.apps.googleusercontent.com',
     iosBundleId: 'com.app.feedApp',
   );
+
 }

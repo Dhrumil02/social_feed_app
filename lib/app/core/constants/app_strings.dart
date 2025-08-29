@@ -1,5 +1,6 @@
 class AppStrings{
   static const login = "Login";
+  static const signIn = "Sign In";
   static const signup = "Sign Up";
   static const logout = "Logout";
   static const email = "Email";
@@ -13,6 +14,8 @@ class AppStrings{
   static const signInWithMobile = "Sign in with Mobile Number";
   static const googleSignIn = "Sign in with Google";
   static const appleSignIn = "Sign in with Apple";
+  static const enterMobileNumber = "Enter Mobile Number";
+  static const mobileNumber = "Mobile Number";
 
   static const home = "Home";
   static const feed = "Feed";
