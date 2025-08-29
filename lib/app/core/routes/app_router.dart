@@ -2,6 +2,9 @@ import 'package:feed_app/app/features/auth/presentation/screens/mobile_auth_scre
 import 'package:feed_app/app/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:feed_app/app/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:feed_app/app/features/bottom_nav/presentation/screens/main_screen.dart';
+import 'package:feed_app/app/features/feed/domain/entity/post.dart';
+import 'package:feed_app/app/features/feed/presentation/screen/create_post_screen.dart';
+import 'package:feed_app/app/features/feed/presentation/screen/edit_post_screen.dart';
 import 'package:feed_app/app/features/splash/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +13,8 @@ import 'package:go_router/go_router.dart';
 class AppRoutes{
   static const initialPage = "/";
   static const signIn = "/signIn";
+  static const addPost = "/addPost";
+  static const editPost = "/editPost";
   static const signUp = "/signup";
   static const mobileAuth = "/mobile-auth";
   static const mainScreen = "/main-screen";
@@ -29,6 +34,12 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.mainScreen,
         builder: (context, state) => const MainScreen(),
+      ), GoRoute(
+        path: AppRoutes.addPost,
+        builder: (context, state) => const CreatePostScreen(),
+      ), GoRoute(
+        path: AppRoutes.editPost,
+        builder: (context, state) =>  EditPostScreen(post: state.extra as Post),
       ),GoRoute(
         path: AppRoutes.signIn,
         builder: (context, state) => const SignInScreen(),

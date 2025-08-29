@@ -1,3 +1,4 @@
+import 'package:feed_app/app/core/routes/app_router.dart';
 import 'package:feed_app/app/export.dart';
 import 'package:feed_app/app/features/bottom_nav/presentation/widgets/custom_bottom_navigation_bar.dart';
 import 'package:feed_app/app/features/feed/presentation/screen/create_post_screen.dart';
@@ -17,7 +18,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _screens = [
     const FeedScreen(),
-    const CreatePostScreen(),
+
     const ProfileScreen(),
   ];
 
@@ -59,9 +60,49 @@ class _MainScreenState extends State<MainScreen> {
           onPageChanged: _onPageChanged,
           children: _screens,
         ),
+        floatingActionButton:_buildCreateButton(context),
+
         bottomNavigationBar: CustomBottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: _onTabTapped,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCreateButton(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return GestureDetector(
+      onTap: (){
+        context.go(AppRoutes.addPost);
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              theme.primaryColor,
+              theme.primaryColor.withOpacity(0.8),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: theme.primaryColor.withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 28,
         ),
       ),
     );

@@ -9,6 +9,12 @@ import 'package:feed_app/app/features/auth/domain/repository/auth_repository.dar
 import 'package:feed_app/app/features/auth/domain/usercase/auth_use_case.dart';
 import 'package:feed_app/app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:feed_app/app/features/bottom_nav/presentation/bloc/bottom_nav_bloc.dart';
+import 'package:feed_app/app/features/feed/data/datasource/feed_remote_datasource.dart';
+import 'package:feed_app/app/features/feed/data/repository/feed_repository_impl.dart';
+import 'package:feed_app/app/features/feed/domain/repository/feed_repository.dart';
+import 'package:feed_app/app/features/feed/domain/usercase/comment_usecases.dart';
+import 'package:feed_app/app/features/feed/domain/usercase/post_usecase.dart';
+import 'package:feed_app/app/features/feed/presentation/bloc/feed_bloc.dart';
 import 'package:feed_app/app/shared/theme/cubit/theme_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -16,6 +22,7 @@ import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../network/network_info.dart';
 
@@ -30,6 +37,7 @@ Future<void> init() async {
   await Hive.openBox('feedApp');
   sl.registerLazySingleton(() => GlobalKey<NavigatorState>());
   sl.registerLazySingleton(() => FirebaseAuth.instance);
+  sl.registerLazySingleton(() => Supabase.instance.client);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
   sl.registerLazySingleton(() => FirebaseStorage.instance);
   sl.registerLazySingleton(() => Connectivity());
@@ -53,7 +61,7 @@ Future<void> init() async {
   );
 */
 
-  // Repository
+
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
       authService: sl(),
@@ -63,7 +71,20 @@ Future<void> init() async {
     ),
   );
 
-  // Use cases
+  sl.registerFactory(
+        () => FeedBloc(
+      createPostUseCase: sl(),
+      getPostsUseCase: sl(),
+      updatePostUseCase: sl(),
+      deletePostUseCase: sl(),
+      likePostUseCase: sl(),
+      unlikePostUseCase: sl(),
+      addCommentUseCase: sl(),
+      getCommentsUseCase: sl(),
+      deleteCommentUseCase: sl(),
+    ),
+  );
+
   sl.registerLazySingleton(() => SignUpWithEmailUseCase(sl()));
   sl.registerLazySingleton(() => SignInWithEmailUseCase(sl()));
   sl.registerLazySingleton(() => SendOTPUseCase(sl()));
@@ -75,8 +96,32 @@ Future<void> init() async {
   sl.registerLazySingleton(() => UpdateUserProfileUseCase(sl()));
   sl.registerLazySingleton(() => SendPasswordResetEmailUseCase(sl()));
   sl.registerLazySingleton(() => IsUserLoggedInUseCase(sl()));
+  sl.registerLazySingleton(() => CreatePostUseCase(sl()));
+  sl.registerLazySingleton(() => GetPostsUseCase(sl()));
+  sl.registerLazySingleton(() => UpdatePostUseCase(sl()));
+  sl.registerLazySingleton(() => DeletePostUseCase(sl()));
+  sl.registerLazySingleton(() => LikePostUseCase(sl()));
+  sl.registerLazySingleton(() => UnlikePostUseCase(sl()));
+  sl.registerLazySingleton(() => AddCommentUseCase(sl()));
+  sl.registerLazySingleton(() => GetCommentsUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteCommentUseCase(sl()));
 
-  // Bloc
+
+
+
+  sl.registerLazySingleton<FeedRepository>(
+        () => FeedRepositoryImpl(
+      remoteDataSource: sl(),
+    ),
+  );
+
+
+  sl.registerLazySingleton<FeedRemoteDataSource>(
+        () => FeedRemoteDataSourceImpl(),
+  );
+
+
+
   sl.registerFactory(
     () => AuthBloc(
       signUpWithEmailUseCase: sl(),

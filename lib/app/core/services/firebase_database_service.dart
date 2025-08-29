@@ -10,11 +10,9 @@ class FirebaseDatabaseService {
   final FirebaseFirestore _firestore = sl<FirebaseFirestore>();
   final FirebaseStorage _storage = sl<FirebaseStorage>();
 
-
   static const String usersCollection = 'users';
 
   Future<void> createUser(UserModel user) async {
-
     await _firestore
         .collection(usersCollection)
         .doc(user.uid)

@@ -16,6 +16,8 @@ class AppStrings{
   static const appleSignIn = "Sign in with Apple";
   static const enterMobileNumber = "Enter Mobile Number";
   static const mobileNumber = "Mobile Number";
+  static const failedToUploadPost = "Failed to update post";
+
 
   static const home = "Home";
   static const feed = "Feed";

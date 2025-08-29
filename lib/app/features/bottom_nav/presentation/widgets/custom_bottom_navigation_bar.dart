@@ -37,7 +37,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 activeIcon: Icons.home,
                 label: 'Home',
               ),
-              _buildCreateButton(context),
 
               _buildNavItem(
                 context: context,
@@ -98,39 +97,5 @@ class CustomBottomNavigationBar extends StatelessWidget {
     );
   }
 
-  Widget _buildCreateButton(BuildContext context) {
-    final theme = Theme.of(context);
 
-    return GestureDetector(
-      onTap: () => onTap(2),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: 50,
-        height: 50,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              theme.primaryColor,
-              theme.primaryColor.withOpacity(0.8),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: theme.primaryColor.withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 28,
-        ),
-      ),
-    );
-  }
 }

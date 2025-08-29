@@ -6,6 +6,7 @@ import 'package:feed_app/app/core/injection/injection_container.dart' as di;
 
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/bottom_nav/presentation/bloc/bottom_nav_bloc.dart';
+import 'features/feed/presentation/bloc/feed_bloc.dart';
 
 class FeedApp extends StatelessWidget {
   const FeedApp({super.key});
@@ -22,8 +23,10 @@ class FeedApp extends StatelessWidget {
         BlocProvider(
           create: (context) => di.sl<ThemeCubit>(),
         ),
-
         BlocProvider(create: (_) => di.sl<BottomNavBloc>() ),
+        BlocProvider(
+          create: (_) => di.sl<FeedBloc>(),
+        ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeData>(
         builder: (context, theme) {
