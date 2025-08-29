@@ -5,6 +5,7 @@ import 'package:feed_app/app/core/utils/extensions/theme_extension.dart';
 import 'package:feed_app/app/core/utils/extensions/widget_extensions.dart';
 import 'package:feed_app/app/core/utils/helpers/app_helper.dart';
 import 'package:feed_app/app/export.dart';
+import 'package:feed_app/app/features/feed/presentation/screen/widgets/image_source_button.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../bloc/feed_event.dart';
@@ -32,7 +33,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText('Create Post'),
+        title: const CustomText(AppStrings.createPost),
         leading: BackButton(
           onPressed: () {
             context.pop();
@@ -175,7 +176,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           ),
                           AppSizes.vGap16,
                           CustomText(
-                            'Tap to add photo',
+                            AppStrings.tapToAddPhoto,
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.grey[600],
@@ -184,7 +185,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           ),
                           AppSizes.vGap8,
                           CustomText(
-                            'Choose from camera or gallery',
+                            AppStrings.chooseFromGallery,
                             style: TextStyle(
                               fontSize: AppSizes.s14,
                               color: Colors.grey[500],
@@ -203,7 +204,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               maxLines: 5,
               maxLength: 500,
               decoration: InputDecoration(
-                labelText: 'Write a caption...',
+                labelText: AppStrings.writeCaption,
                 hintText: 'Share what\'s on your mind',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSizes.s12),
@@ -292,13 +293,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   String _getStatusMessage() {
     if (_selectedImage == null && _captionController.text.trim().isEmpty) {
-      return 'Add a photo and write a caption to share your post';
+      return AppStrings.addAPhotoANdWriteCaption;
     } else if (_selectedImage == null) {
-      return 'Add a photo to complete your post';
+      return AppStrings.addPhotoToCompletePost;
     } else if (_captionController.text.trim().isEmpty) {
-      return 'Write a caption to complete your post';
+      return AppStrings.writeCaptionToCompleteYourPost;
     } else {
-      return 'Your post is ready to be shared with everyone!';
+      return AppStrings.postIsReady;
     }
   }
 
@@ -317,7 +318,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 40,
+                width: AppSizes.s40,
                 height: AppSizes.s4,
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
@@ -325,17 +326,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 ),
               ),
               AppSizes.vGap20,
-              const CustomText(
-                'Select Photo',
+              CustomText(
+                AppStrings.selectImage,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               AppSizes.vGap20,
               Row(
                 children: [
                   Expanded(
-                    child: _ImageSourceButton(
+                    child: ImageSourceButton(
                       icon: Icons.photo_camera,
-                      label: 'Camera',
+                      label: AppStrings.camera,
                       onTap: () {
                         Navigator.pop(context);
                         _getImage(ImageSource.camera);
@@ -344,7 +345,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   ),
                   AppSizes.hGap16,
                   Expanded(
-                    child: _ImageSourceButton(
+                    child: ImageSourceButton(
                       icon: Icons.photo_library,
                       label: AppStrings.gallery,
                       onTap: () {
@@ -359,9 +360,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 AppSizes.vGap16,
                 SizedBox(
                   width: double.infinity,
-                  child: _ImageSourceButton(
+                  child: ImageSourceButton(
                     icon: Icons.delete_outline,
-                    label: 'Remove Photo',
+                    label: AppStrings.removePhoto,
                     color: Colors.red,
                     onTap: () {
                       Navigator.pop(context);
@@ -412,51 +413,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       CreatePost(
         caption: _captionController.text.trim(),
         imageFile: _selectedImage!,
-      ),
-    );
-  }
-}
-
-class _ImageSourceButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  final Color? color;
-
-  const _ImageSourceButton({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-    this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final buttonColor = color ?? Colors.blue;
-
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(AppSizes.s12),
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          vertical: AppSizes.s16,
-          horizontal: AppSizes.s12,
-        ),
-        decoration: BoxDecoration(
-          border: Border.all(color: buttonColor.withOpacity(0.3)),
-          borderRadius: BorderRadius.circular(AppSizes.s12),
-          color: buttonColor.withOpacity(0.1),
-        ),
-        child: Column(
-          children: [
-            Icon(icon, color: buttonColor, size: AppSizes.s32),
-            AppSizes.vGap8,
-            CustomText(
-              label,
-              style: TextStyle(color: buttonColor, fontWeight: FontWeight.w500),
-            ),
-          ],
-        ),
       ),
     );
   }

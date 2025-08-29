@@ -36,3 +36,13 @@ export 'package:feed_app/app/shared/sizer/app_sizes.dart';
 export 'package:feed_app/app/shared/sizer/app_spacing.dart';
 export 'package:feed_app/app/shared/theme/app_theme.dart';
 export 'package:feed_app/app/core/utils/extensions/sizer_extensions.dart';
+export 'package:feed_app/app/features/feed/data/models/comment_model.dart';
+export 'package:feed_app/app/features/feed/data/models/post_model.dart';
+
+export 'package:feed_app/app/core/injection/injection_container.dart';
+export 'package:feed_app/app/core/utils/extensions/text_extensions.dart';
+export 'package:feed_app/app/core/utils/extensions/theme_extension.dart';
+export 'package:feed_app/app/core/utils/extensions/widget_extensions.dart';
+
+export 'package:feed_app/app/features/profile/presentation/screen/stat_card.dart';
+export 'package:feed_app/app/shared/widgets/custom_image.dart';

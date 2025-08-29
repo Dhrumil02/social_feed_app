@@ -1,13 +1,6 @@
-import 'package:feed_app/app/core/utils/extensions/theme_extension.dart';
-import 'package:feed_app/app/core/utils/extensions/widget_extensions.dart';
 import 'package:feed_app/app/core/utils/helpers/app_helper.dart';
 import 'package:feed_app/app/export.dart';
-import 'package:feed_app/app/features/feed/presentation/bloc/feed_bloc.dart';
 import 'package:feed_app/app/features/feed/presentation/bloc/feed_event.dart';
-import 'package:feed_app/app/features/feed/presentation/bloc/feed_state.dart';
-import 'package:feed_app/app/features/feed/presentation/screen/widgets/post_card.dart';
-
-import 'edit_post_screen.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
@@ -17,17 +10,20 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
-
   @override
   void initState() {
     context.read<FeedBloc>().add(LoadPosts());
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: CustomText(AppStrings.feed),
+        title: CustomText(
+          AppStrings.feed,
+          style: context.headlineMedium.bold.copyWith(color: Colors.white),
+        ),
         centerTitle: true,
       ),
       body: RefreshIndicator(
@@ -38,7 +34,6 @@ class _FeedScreenState extends State<FeedScreen> {
           listener: (context, state) {
             if (state.status == Status.failure) {
               AppHelper.showToast(state.errorMessage ?? 'An error occurred');
-
             }
           },
           builder: (context, state) {
@@ -47,7 +42,7 @@ class _FeedScreenState extends State<FeedScreen> {
             }
 
             if (state.posts.isEmpty) {
-              return  Column(
+              return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
@@ -62,7 +57,7 @@ class _FeedScreenState extends State<FeedScreen> {
                   ),
                   AppSizes.vGap8,
                   CustomText(
-                    'Create your first post!',
+                    AppStrings.createYourFirstPost,
                     style: TextStyle(
                       fontSize: AppSizes.s14,
                       color: Colors.grey,
@@ -79,7 +74,7 @@ class _FeedScreenState extends State<FeedScreen> {
                 return PostCard(
                   post: post,
                   onEdit: () {
-                    context.go(AppRoutes.editPost,extra: post);
+                    context.go(AppRoutes.editPost, extra: post);
                   },
                 );
               },

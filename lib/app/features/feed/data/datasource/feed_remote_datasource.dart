@@ -199,15 +199,19 @@ class FeedRemoteDataSourceImpl implements FeedRemoteDataSource {
   @override
   Future<List<CommentModel>> getComments(String postId) async {
     try {
+
       final querySnapshot = await _fireStore
           .collection(commentsCollection)
           .where('postId', isEqualTo: postId)
-          .orderBy('createdAt', descending: false)
           .get();
 
-      return querySnapshot.docs
+      final comments = querySnapshot.docs
           .map((doc) => CommentModel.fromJson(doc.data()))
           .toList();
+
+      comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+      return comments;
     } catch (e) {
       throw Exception('Failed to get comments: $e');
     }

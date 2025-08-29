@@ -32,7 +32,8 @@ class AppStrings{
   static const failedToUploadPost = "Failed to update post";
   static const editPost = "Edit Post";
   static const welcomeBack = "Welcome Back";
-
+  static const createPost = 'Create Post';
+  static const chooseFromGallery = 'Choose from camera or gallery';
 
   static const home = "Home";
   static const feed = "Feed";
@@ -41,6 +42,12 @@ class AppStrings{
   static const newPost = "New Post";
   static const caption = "Caption";
   static const writeCaption = "Write a caption...";
+  static const removePhoto = "Remove Photo";
+  static const createYourFirstPost = "Create your first post!";
+  static const addAPhotoANdWriteCaption = "Add a photo and write a caption to share your post";
+  static const addPhotoToCompletePost = "Add a photo to complete your post";
+  static const writeCaptionToCompleteYourPost = "Write a caption to complete your post";
+  static const postIsReady = "Your post is ready to be shared with everyone!";
   static const uploadImage = "Upload Image";
   static const post = "Post";
   static const failedToUpdatePost = "Failed to update post";

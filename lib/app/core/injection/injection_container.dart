@@ -1,4 +1,5 @@
 import 'package:feed_app/app/export.dart';
+import 'package:feed_app/app/features/feed/data/datasource/feed_local_datasource.dart';
 
 final sl = GetIt.instance;
 
@@ -77,9 +78,12 @@ Future<void> init() async {
   sl.registerLazySingleton(() => AddCommentUseCase(sl()));
   sl.registerLazySingleton(() => GetCommentsUseCase(sl()));
   sl.registerLazySingleton(() => DeleteCommentUseCase(sl()));
+  sl.registerLazySingleton<FeedLocalDataSource>(
+        () => FeedLocalDataSourceImpl(),
+  );
 
   sl.registerLazySingleton<FeedRepository>(
-    () => FeedRepositoryImpl(remoteDataSource: sl()),
+    () => FeedRepositoryImpl(remoteDataSource: sl(),localDataSource: sl()),
   );
 
   sl.registerLazySingleton<FeedRemoteDataSource>(

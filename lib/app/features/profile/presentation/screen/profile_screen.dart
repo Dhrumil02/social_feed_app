@@ -1,9 +1,4 @@
-import 'package:feed_app/app/core/injection/injection_container.dart';
-import 'package:feed_app/app/core/utils/extensions/theme_extension.dart';
-import 'package:feed_app/app/core/utils/extensions/widget_extensions.dart';
 import 'package:feed_app/app/export.dart';
-import 'package:feed_app/app/features/profile/presentation/screen/stat_card.dart';
-import 'package:feed_app/app/shared/widgets/custom_image.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -14,7 +9,10 @@ class ProfileScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: CustomText(AppStrings.profile),
+        title: CustomText(
+          AppStrings.profile,
+          style: context.headlineMedium.bold.copyWith(color: Colors.white),
+        ),
         leading: BlocBuilder<ThemeCubit, ThemeData>(
           builder: (ctx, state) {
             final theme = context.watch<ThemeCubit>().state;

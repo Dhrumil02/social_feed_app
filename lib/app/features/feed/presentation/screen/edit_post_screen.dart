@@ -150,35 +150,6 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
             AppSizes.vGap16,
 
-            if (_newImage != null)
-              Container(
-                padding: Spacing.all(AppSizes.s12),
-                decoration: BoxDecoration(
-                  color: Colors.orange[50],
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.orange[200]!),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.info_outline, color: Colors.orange[700]),
-                    AppSizes.hGap8,
-                    const Expanded(
-                      child: CustomText(
-                        'New image selected. It will replace the current image.',
-                        style: TextStyle(fontSize: AppSizes.s14),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _newImage = null;
-                        });
-                      },
-                      child: const CustomText('Cancel'),
-                    ),
-                  ],
-                ),
-              ),
           ],
         ),
       ).padAll(AppSizes.s16),

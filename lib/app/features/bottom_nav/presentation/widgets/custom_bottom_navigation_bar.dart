@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:feed_app/app/export.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
@@ -12,12 +13,18 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+        color: isDarkMode
+            ? Colors.grey[900]
+            : Theme.of(context).bottomNavigationBarTheme.backgroundColor ?? Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: isDarkMode
+                ? Colors.black.withOpacity(0.3)
+                : Colors.black.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -40,7 +47,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 activeIcon: Icons.home,
                 label: 'Home',
               ),
-
               _buildNavItem(
                 context: context,
                 index: 4,
@@ -64,7 +70,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
   }) {
     final isActive = currentIndex == index;
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     final primaryColor = theme.primaryColor;
+
+    // Adaptive colors for dark mode
+    final inactiveColor = isDarkMode ? Colors.grey[400] : Colors.grey;
+    final backgroundColor = isActive
+        ? primaryColor.withOpacity(isDarkMode ? 0.15 : 0.1)
+        : Colors.transparent;
 
     return GestureDetector(
       onTap: () => onTap(index),
@@ -75,25 +88,30 @@ class CustomBottomNavigationBar extends StatelessWidget {
           vertical: AppSizes.s4,
         ),
         decoration: BoxDecoration(
-          color: isActive ? primaryColor.withOpacity(0.1) : Colors.transparent,
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(AppSizes.s12),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              isActive ? activeIcon : icon,
-              color: isActive ? primaryColor : Colors.grey,
-              size: AppSizes.s24,
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 150),
+              child: Icon(
+                isActive ? activeIcon : icon,
+                key: ValueKey(isActive),
+                color: isActive ? primaryColor : inactiveColor,
+                size: AppSizes.s24,
+              ),
             ),
             AppSizes.vGap2,
-            CustomText(
-              label,
+            AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 150),
               style: TextStyle(
-                color: isActive ? primaryColor : Colors.grey,
+                color: isActive ? primaryColor : inactiveColor,
                 fontSize: AppSizes.s10,
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
               ),
+              child: CustomText(label),
             ),
           ],
         ),

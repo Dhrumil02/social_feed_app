@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:feed_app/app/features/feed/data/datasource/feed_local_datasource.dart';
 import 'package:feed_app/app/features/feed/data/datasource/feed_remote_datasource.dart';
 import 'package:feed_app/app/features/feed/data/models/comment_model.dart';
 import 'package:feed_app/app/features/feed/data/models/post_model.dart';
@@ -10,8 +11,9 @@ import 'package:uuid/uuid.dart';
 
 class FeedRepositoryImpl implements FeedRepository {
   final FeedRemoteDataSource remoteDataSource;
+  final FeedLocalDataSource localDataSource;
 
-  FeedRepositoryImpl({required this.remoteDataSource});
+  FeedRepositoryImpl({required this.remoteDataSource,required this.localDataSource});
 
   @override
   Future<Post> createPost({
@@ -43,9 +45,10 @@ class FeedRepositoryImpl implements FeedRepository {
   Future<List<Post>> getPosts() async {
     try {
       final posts = await remoteDataSource.getPosts();
+      await localDataSource.cachePosts(posts);
       return posts;
     } catch (e) {
-      throw 'Post Not Found';
+      return await localDataSource.getCachedPosts();
     }
   }
 
@@ -106,10 +109,10 @@ class FeedRepositoryImpl implements FeedRepository {
   Future<List<Comment>> getComments(String postId) async {
     try {
       final comments = await remoteDataSource.getComments(postId);
-
+      await localDataSource.cacheComments(postId, comments.cast<CommentModel>());
       return comments;
     } catch (e) {
-      throw 'no comment found';
+      return await localDataSource.getCachedComments(postId);
     }
   }
 
