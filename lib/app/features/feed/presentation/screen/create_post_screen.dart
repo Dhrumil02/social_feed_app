@@ -90,7 +90,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         )
                       : CustomText(
                           AppStrings.share,
-                          style: context.bodyMedium.bold,
+                          style: context.bodyMedium.bold.copyWith(color: Colors.black),
                         ),
                 ),
               );

@@ -100,10 +100,12 @@ class AuthRepositoryImpl implements AuthRepository {
 
         await FirebaseAuth.instance.verifyPhoneNumber(
           phoneNumber: phoneNumber,
+
           verificationCompleted: (PhoneAuthCredential credential) async {
             await FirebaseAuth.instance.signInWithCredential(credential);
           },
           verificationFailed: (FirebaseAuthException e) {
+            print("AUTH FAILED 1 : $e");
             throw e;
           },
           codeSent: (String vId, int? resendToken) {
@@ -117,9 +119,11 @@ class AuthRepositoryImpl implements AuthRepository {
         if (verificationId != null) {
           return Right(verificationId!);
         } else {
+          print("OTP EXCEPTION11");
           return const Left(AuthFailure(message: 'Failed to send OTP'));
         }
       } on FirebaseAuthException catch (e) {
+        print("OTP EXCEPTION1 $e");
         return Left(AuthFailure(message: e.message ?? 'Failed to send OTP'));
       } catch (e) {
         return Left(ServerFailure(message: e.toString()));

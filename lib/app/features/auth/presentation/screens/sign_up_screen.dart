@@ -147,10 +147,7 @@ class _SignUpScreenState extends State<SignUpScreen> with ValidationMixin {
                           onPressed: _signUpWithEmail,
                           isLoading: state is AuthLoading,
                           isEnabled:
-                              _nameController.text.isNotEmpty &&
-                              _emailController.text.isNotEmpty &&
-                              _passwordController.text.isNotEmpty &&
-                              _confirmPasswordController.text.isNotEmpty &&
+
                               state is! AuthLoading,
                           backGroundColor: Theme.of(context).primaryColor,
                           fontColor: Colors.white,

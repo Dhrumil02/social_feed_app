@@ -52,7 +52,7 @@ class AuthenticationService {
         }
       },
       verificationFailed: (FirebaseAuthException e) {
-        print('FIrebase Auth Exception $e');
+        print('Firebase Auth Exception $e');
         completer.completeError(e);
       },
       codeSent: (String verificationId, int? resendToken) {

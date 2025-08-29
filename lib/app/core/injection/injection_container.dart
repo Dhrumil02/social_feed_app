@@ -12,6 +12,7 @@ Future<void> init() async {
   await Hive.openBox('feedApp');
   sl.registerLazySingleton(() => GlobalKey<NavigatorState>());
   sl.registerLazySingleton(() => FirebaseAuth.instance);
+  sl.registerLazySingleton(() => FirebaseAuth.instance.initializeRecaptchaConfig());
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
   sl.registerLazySingleton(() => FirebaseStorage.instance);
   sl.registerLazySingleton(() => Connectivity());
