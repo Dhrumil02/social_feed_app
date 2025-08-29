@@ -1,5 +1,5 @@
-package com.app.feed_app
+    package com.app.feedapp
 
-import io.flutter.embedding.android.FlutterActivity
+    import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity : FlutterActivity()
+    class MainActivity : FlutterActivity()
