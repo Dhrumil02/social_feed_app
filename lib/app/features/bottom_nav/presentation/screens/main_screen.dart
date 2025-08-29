@@ -1,7 +1,5 @@
-import 'package:feed_app/app/core/routes/app_router.dart';
 import 'package:feed_app/app/export.dart';
 import 'package:feed_app/app/features/bottom_nav/presentation/widgets/custom_bottom_navigation_bar.dart';
-import 'package:feed_app/app/features/feed/presentation/screen/create_post_screen.dart';
 import 'package:feed_app/app/features/feed/presentation/screen/feed_screen.dart';
 import 'package:feed_app/app/features/profile/presentation/screen/profile_screen.dart';
 
@@ -16,11 +14,7 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
   late PageController _pageController;
 
-  final List<Widget> _screens = [
-    const FeedScreen(),
-
-    const ProfileScreen(),
-  ];
+  final List<Widget> _screens = [const FeedScreen(), const ProfileScreen()];
 
   @override
   void initState() {
@@ -60,7 +54,7 @@ class _MainScreenState extends State<MainScreen> {
           onPageChanged: _onPageChanged,
           children: _screens,
         ),
-        floatingActionButton:_buildCreateButton(context),
+        floatingActionButton: _buildCreateButton(context),
 
         bottomNavigationBar: CustomBottomNavigationBar(
           currentIndex: _currentIndex,
@@ -74,23 +68,20 @@ class _MainScreenState extends State<MainScreen> {
     final theme = Theme.of(context);
 
     return GestureDetector(
-      onTap: (){
-        context.go(AppRoutes.addPost);
+      onTap: () {
+        context.push(AppRoutes.addPost);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        width: 50,
-        height: 50,
+        width: AppSizes.s50,
+        height: AppSizes.s50,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              theme.primaryColor,
-              theme.primaryColor.withOpacity(0.8),
-            ],
+            colors: [theme.primaryColor, theme.primaryColor.withOpacity(0.8)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSizes.s12),
           boxShadow: [
             BoxShadow(
               color: theme.primaryColor.withOpacity(0.3),
@@ -99,11 +90,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ],
         ),
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 28,
-        ),
+        child: const Icon(Icons.add, color: Colors.white, size: AppSizes.s28),
       ),
     );
   }

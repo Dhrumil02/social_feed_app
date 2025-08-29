@@ -1,12 +1,11 @@
-import 'package:feed_app/app/core/routes/app_router.dart';
-import 'package:feed_app/app/core/utils/mixins/validation_mixin.dart';
-import 'package:feed_app/app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:feed_app/app/shared/widgets/custom_button.dart';
-import 'package:feed_app/app/shared/widgets/custom_text_field.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'dart:io';
 
+import 'package:feed_app/app/core/constants/app_images.dart';
+import 'package:feed_app/app/core/utils/extensions/text_extensions.dart';
+import 'package:feed_app/app/core/utils/extensions/theme_extension.dart';
+import 'package:feed_app/app/core/utils/helpers/app_helper.dart';
+import 'package:feed_app/app/export.dart';
+import 'package:feed_app/app/shared/widgets/custom_image.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -35,11 +34,13 @@ class _SignUpScreenState extends State<SignUpScreen> with ValidationMixin {
 
   void _signUpWithEmail() {
     if (_formKey.currentState!.validate()) {
-      context.read<AuthBloc>().add(SignUpWithEmailEvent(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-        name: _nameController.text.trim(),
-      ));
+      context.read<AuthBloc>().add(
+        SignUpWithEmailEvent(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+          name: _nameController.text.trim(),
+        ),
+      );
     }
   }
 
@@ -54,51 +55,53 @@ class _SignUpScreenState extends State<SignUpScreen> with ValidationMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
             context.go(AppRoutes.mainScreen);
           } else if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
-              ),
-            );
+            AppHelper.showToast(state.message);
           }
         },
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: Spacing.all(AppSizes.s24),
             child: Form(
               key: _formKey,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 40),
-                    Text(
-                      'Create Account',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    CustomImage(
+                      imageUrl: AppImages.imgAppLogo,
+                      height: AppSizes.s100,
+                      width: AppSizes.s100,
                     ),
-                    const SizedBox(height: 32),
+                    AppSizes.vGap16,
+                    CustomText(
+                      AppStrings.createAccount,
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    AppSizes.vGap32,
                     CustomTextField(
                       controller: _nameController,
-                      labelText: 'Full Name',
+                      labelText: AppStrings.fullName,
                       keyboardType: TextInputType.name,
                       validator: validateRequired,
                     ),
+                    AppSizes.vGap8,
                     CustomTextField(
                       controller: _emailController,
-                      labelText: 'Email',
+                      labelText: AppStrings.email,
                       keyboardType: TextInputType.emailAddress,
                       validator: validateEmail,
                     ),
+                    AppSizes.vGap8,
                     CustomTextField(
                       controller: _passwordController,
-                      labelText: 'Password',
+                      labelText: AppStrings.password,
                       obscureText: _obscurePassword,
                       validator: validatePassword,
                       suffixIcon: IconButton(
@@ -114,6 +117,7 @@ class _SignUpScreenState extends State<SignUpScreen> with ValidationMixin {
                         ),
                       ),
                     ),
+                    AppSizes.vGap8,
                     CustomTextField(
                       controller: _confirmPasswordController,
                       labelText: 'Confirm Password',
@@ -135,14 +139,15 @@ class _SignUpScreenState extends State<SignUpScreen> with ValidationMixin {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    AppSizes.vGap24,
                     BlocBuilder<AuthBloc, AuthState>(
                       builder: (context, state) {
                         return CustomButton(
-                          text: 'Create Account',
+                          text: AppStrings.createAccount,
                           onPressed: _signUpWithEmail,
                           isLoading: state is AuthLoading,
-                          isEnabled: _nameController.text.isNotEmpty &&
+                          isEnabled:
+                              _nameController.text.isNotEmpty &&
                               _emailController.text.isNotEmpty &&
                               _passwordController.text.isNotEmpty &&
                               _confirmPasswordController.text.isNotEmpty &&
@@ -151,55 +156,64 @@ class _SignUpScreenState extends State<SignUpScreen> with ValidationMixin {
                           fontColor: Colors.white,
                           fontWeight: FontWeight.w600,
                           borderColor: Theme.of(context).primaryColor,
-                          borderRadius: 12,
-                          textSize: 16,
+                          borderRadius: AppSizes.s12,
+                          textSize: AppSizes.s16,
                         );
                       },
                     ),
-                    const SizedBox(height: 16),
+                    AppSizes.vGap16,
                     Row(
                       children: [
                         const Expanded(child: Divider()),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSizes.s16,
+                          ),
+                          child: CustomText(
                             'OR',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: Colors.grey[600]),
                           ),
                         ),
                         const Expanded(child: Divider()),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    CustomButton(
-                      text: 'Continue with Google',
+                    AppSizes.vGap16,
+                    CustomIconTextButton(
+                      iconRight: true,
+                      svgIcon: AppImages.icGoogle,
+                      text: AppStrings.continueWithGoogle,
                       onPressed: _signInWithGoogle,
                       isEnabled: true,
                       backGroundColor: Colors.white,
                       fontColor: Colors.black87,
                       fontWeight: FontWeight.w600,
                       borderColor: Colors.grey.shade300,
-                      borderRadius: 12,
-                      textSize: 16,
+                      borderRadius: AppSizes.s12,
+                      textSize: AppSizes.s16,
                     ),
-                    const SizedBox(height: 12),
-                    CustomButton(
-                      text: 'Continue with Apple',
-                      onPressed: _signInWithApple,
-                      isEnabled: true,
-                      backGroundColor: Colors.black,
-                      fontColor: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      borderColor: Colors.black,
-                      borderRadius: 12,
-                      textSize: 16,
-                    ),
-                    const SizedBox(height: 24),
+                    if (Platform.isIOS) AppSizes.vGap12,
+                    if (Platform.isIOS)
+                      CustomIconTextButton(
+                        iconRight: true,
+                        svgIcon: AppImages.icApple,
+                        text: AppStrings.continueWithApple,
+                        onPressed: _signInWithApple,
+                        isEnabled: true,
+                        backGroundColor: Colors.black,
+                        fontColor: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        borderColor: Colors.black,
+                        borderRadius: AppSizes.s12,
+                        textSize: AppSizes.s16,
+                      ),
+                    AppSizes.vGap24,
                     TextButton(
-                      onPressed: () => context.go('/login'),
-                      child: const Text('Already have an account? Sign In'),
+                      onPressed: () => context.go(AppRoutes.signIn),
+                      child:  CustomText(
+                        'Already have an account? Sign In',
+                        style: context.bodyMedium.bold,
+                      ),
                     ),
                   ],
                 ),

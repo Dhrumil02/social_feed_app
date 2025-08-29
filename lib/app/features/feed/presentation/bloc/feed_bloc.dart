@@ -30,16 +30,16 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     required AddCommentUseCase addCommentUseCase,
     required GetCommentsUseCase getCommentsUseCase,
     required DeleteCommentUseCase deleteCommentUseCase,
-  })  : _createPostUseCase = createPostUseCase,
-        _getPostsUseCase = getPostsUseCase,
-        _updatePostUseCase = updatePostUseCase,
-        _deletePostUseCase = deletePostUseCase,
-        _likePostUseCase = likePostUseCase,
-        _unlikePostUseCase = unlikePostUseCase,
-        _addCommentUseCase = addCommentUseCase,
-        _getCommentsUseCase = getCommentsUseCase,
-        _deleteCommentUseCase = deleteCommentUseCase,
-        super(const FeedState()) {
+  }) : _createPostUseCase = createPostUseCase,
+       _getPostsUseCase = getPostsUseCase,
+       _updatePostUseCase = updatePostUseCase,
+       _deletePostUseCase = deletePostUseCase,
+       _likePostUseCase = likePostUseCase,
+       _unlikePostUseCase = unlikePostUseCase,
+       _addCommentUseCase = addCommentUseCase,
+       _getCommentsUseCase = getCommentsUseCase,
+       _deleteCommentUseCase = deleteCommentUseCase,
+       super(const FeedState()) {
     on<LoadPosts>(_onLoadPosts);
     on<CreatePost>(_onCreatePost);
     on<UpdatePost>(_onUpdatePost);
@@ -56,15 +56,9 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
 
     try {
       final posts = await _getPostsUseCase();
-      emit(state.copyWith(
-        status: Status.success,
-        posts: posts,
-      ));
+      emit(state.copyWith(status: Status.success, posts: posts));
     } catch (e) {
-      emit(state.copyWith(
-        status: Status.failure,
-        errorMessage: e.toString(),
-      ));
+      emit(state.copyWith(status: Status.failure, errorMessage: e.toString()));
     }
   }
 
@@ -83,15 +77,16 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       );
 
       final updatedPosts = [post, ...state.posts];
-      emit(state.copyWith(
-        postActionStatus: Status.success,
-        posts: updatedPosts,
-      ));
+      emit(
+        state.copyWith(postActionStatus: Status.success, posts: updatedPosts),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        postActionStatus: Status.failure,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          postActionStatus: Status.failure,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -109,16 +104,20 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         return post.id == event.postId ? updatedPost : post;
       }).toList();
 
-      emit(state.copyWith(
-        postActionStatus: Status.success,
-        posts: updatedPosts,
-        updatedPost: updatedPost,
-      ));
+      emit(
+        state.copyWith(
+          postActionStatus: Status.success,
+          posts: updatedPosts,
+          updatedPost: updatedPost,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        postActionStatus: Status.failure,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          postActionStatus: Status.failure,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -126,18 +125,15 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     try {
       await _deletePostUseCase(event.postId);
 
-      final updatedPosts = state.posts.where((post) => post.id != event.postId).toList();
+      final updatedPosts = state.posts
+          .where((post) => post.id != event.postId)
+          .toList();
       final updatedComments = Map<String, List<Comment>>.from(state.comments);
       updatedComments.remove(event.postId);
 
-      emit(state.copyWith(
-        posts: updatedPosts,
-        comments: updatedComments,
-      ));
+      emit(state.copyWith(posts: updatedPosts, comments: updatedComments));
     } catch (e) {
-      emit(state.copyWith(
-        errorMessage: e.toString(),
-      ));
+      emit(state.copyWith(errorMessage: e.toString()));
     }
   }
 
@@ -163,7 +159,10 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     if (currentUser == null) return;
 
     try {
-      final updatedPost = await _unlikePostUseCase(event.postId, currentUser.uid);
+      final updatedPost = await _unlikePostUseCase(
+        event.postId,
+        currentUser.uid,
+      );
 
       final updatedPosts = state.posts.map((post) {
         return post.id == event.postId ? updatedPost : post;
@@ -175,7 +174,10 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     }
   }
 
-  Future<void> _onLoadComments(LoadComments event, Emitter<FeedState> emit) async {
+  Future<void> _onLoadComments(
+    LoadComments event,
+    Emitter<FeedState> emit,
+  ) async {
     try {
       final comments = await _getCommentsUseCase(event.postId);
 
@@ -201,7 +203,9 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       );
 
       final updatedComments = Map<String, List<Comment>>.from(state.comments);
-      final postComments = List<Comment>.from(updatedComments[event.postId] ?? []);
+      final postComments = List<Comment>.from(
+        updatedComments[event.postId] ?? [],
+      );
       postComments.add(comment);
       updatedComments[event.postId] = postComments;
 
@@ -223,16 +227,16 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         return post;
       }).toList();
 
-      emit(state.copyWith(
-        comments: updatedComments,
-        posts: updatedPosts,
-      ));
+      emit(state.copyWith(comments: updatedComments, posts: updatedPosts));
     } catch (e) {
       emit(state.copyWith(errorMessage: e.toString()));
     }
   }
 
-  Future<void> _onDeleteComment(DeleteComment event, Emitter<FeedState> emit) async {
+  Future<void> _onDeleteComment(
+    DeleteComment event,
+    Emitter<FeedState> emit,
+  ) async {
     try {
       await _deleteCommentUseCase(event.commentId);
 
@@ -240,7 +244,9 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       String? postId;
 
       for (final data in updatedComments.entries) {
-        final commentIndex = data.value.indexWhere((c) => c.id == event.commentId);
+        final commentIndex = data.value.indexWhere(
+          (c) => c.id == event.commentId,
+        );
         if (commentIndex != -1) {
           postId = data.key;
           final postComments = List<Comment>.from(data.value);
@@ -271,10 +277,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         }).toList();
       }
 
-      emit(state.copyWith(
-        comments: updatedComments,
-        posts: updatedPosts,
-      ));
+      emit(state.copyWith(comments: updatedComments, posts: updatedPosts));
     } catch (e) {
       emit(state.copyWith(errorMessage: e.toString()));
     }

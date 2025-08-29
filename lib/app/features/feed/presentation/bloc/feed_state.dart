@@ -2,8 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:feed_app/app/features/feed/domain/entity/comment.dart';
 import 'package:feed_app/app/features/feed/domain/entity/post.dart';
 
-
-
 enum Status { initial, loading, success, failure }
 
 class FeedState extends Equatable {

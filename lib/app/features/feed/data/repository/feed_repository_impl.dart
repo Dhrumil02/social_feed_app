@@ -11,9 +11,7 @@ import 'package:uuid/uuid.dart';
 class FeedRepositoryImpl implements FeedRepository {
   final FeedRemoteDataSource remoteDataSource;
 
-  FeedRepositoryImpl({
-    required this.remoteDataSource,
-  });
+  FeedRepositoryImpl({required this.remoteDataSource});
 
   @override
   Future<Post> createPost({
@@ -111,7 +109,7 @@ class FeedRepositoryImpl implements FeedRepository {
 
       return comments;
     } catch (e) {
-      throw 'no comment found' ;
+      throw 'no comment found';
     }
   }
 

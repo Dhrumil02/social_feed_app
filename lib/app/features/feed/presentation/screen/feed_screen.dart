@@ -1,3 +1,6 @@
+import 'package:feed_app/app/core/utils/extensions/theme_extension.dart';
+import 'package:feed_app/app/core/utils/extensions/widget_extensions.dart';
+import 'package:feed_app/app/core/utils/helpers/app_helper.dart';
 import 'package:feed_app/app/export.dart';
 import 'package:feed_app/app/features/feed/presentation/bloc/feed_bloc.dart';
 import 'package:feed_app/app/features/feed/presentation/bloc/feed_event.dart';
@@ -24,7 +27,7 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Feed'),
+        title: CustomText(AppStrings.feed),
         centerTitle: true,
       ),
       body: RefreshIndicator(
@@ -34,48 +37,39 @@ class _FeedScreenState extends State<FeedScreen> {
         child: BlocConsumer<FeedBloc, FeedState>(
           listener: (context, state) {
             if (state.status == Status.failure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.errorMessage ?? 'An error occurred'),
-                  backgroundColor: Colors.red,
-                ),
-              );
+              AppHelper.showToast(state.errorMessage ?? 'An error occurred');
+
             }
           },
           builder: (context, state) {
             if (state.status == Status.loading && state.posts.isEmpty) {
-              return const Center(child: CircularProgressIndicator());
+              return const CircularProgressIndicator().center;
             }
 
             if (state.posts.isEmpty) {
-              return const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.photo_library_outlined,
-                      size: 80,
+              return  Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.photo_library_outlined,
+                    size: 80,
+                    color: Colors.grey,
+                  ),
+                  AppSizes.vGap16,
+                  CustomText(
+                    AppStrings.noPostYet,
+                    style: context.bodyLarge.copyWith(color: Colors.grey),
+                  ),
+                  AppSizes.vGap8,
+                  CustomText(
+                    'Create your first post!',
+                    style: TextStyle(
+                      fontSize: AppSizes.s14,
                       color: Colors.grey,
                     ),
-                    SizedBox(height: 16),
-                    Text(
-                      'No posts yet',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Create your first post!',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              );
+                  ),
+                ],
+              ).center;
             }
 
             return ListView.builder(
@@ -85,12 +79,7 @@ class _FeedScreenState extends State<FeedScreen> {
                 return PostCard(
                   post: post,
                   onEdit: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditPostScreen(post: post),
-                      ),
-                    );
+                    context.go(AppRoutes.editPost,extra: post);
                   },
                 );
               },

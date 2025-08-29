@@ -21,7 +21,7 @@ abstract class FeedRemoteDataSource {
 
 
 class FeedRemoteDataSourceImpl implements FeedRemoteDataSource {
-  final FirebaseFirestore _firestore = sl<FirebaseFirestore>();
+  final FirebaseFirestore _fireStore = sl<FirebaseFirestore>();
   final FirebaseStorage _storage = sl<FirebaseStorage>();
 
   static const String postsCollection = 'posts';
@@ -45,7 +45,7 @@ class FeedRemoteDataSourceImpl implements FeedRemoteDataSource {
         likedBy: [],
       );
 
-      await _firestore
+      await _fireStore
           .collection(postsCollection)
           .doc(post.id)
           .set(postWithImage.toJson());
@@ -59,7 +59,7 @@ class FeedRemoteDataSourceImpl implements FeedRemoteDataSource {
   @override
   Future<List<PostModel>> getPosts() async {
     try {
-      final querySnapshot = await _firestore
+      final querySnapshot = await _fireStore
           .collection(postsCollection)
           .orderBy('createdAt', descending: true)
           .get();
@@ -86,7 +86,7 @@ class FeedRemoteDataSourceImpl implements FeedRemoteDataSource {
         updatedAt: DateTime.now(),
       );
 
-      await _firestore
+      await _fireStore
           .collection(postsCollection)
           .doc(post.id)
           .update(updatedPost.toJson());
@@ -101,15 +101,15 @@ class FeedRemoteDataSourceImpl implements FeedRemoteDataSource {
   Future<void> deletePost(String postId) async {
     try {
 
-      await _firestore.collection(postsCollection).doc(postId).delete();
+      await _fireStore.collection(postsCollection).doc(postId).delete();
 
 
-      final commentsQuery = await _firestore
+      final commentsQuery = await _fireStore
           .collection(commentsCollection)
           .where('postId', isEqualTo: postId)
           .get();
 
-      final batch = _firestore.batch();
+      final batch = _fireStore.batch();
       for (final doc in commentsQuery.docs) {
         batch.delete(doc.reference);
       }
@@ -122,9 +122,9 @@ class FeedRemoteDataSourceImpl implements FeedRemoteDataSource {
   @override
   Future<PostModel> likePost(String postId, String userId) async {
     try {
-      final data = _firestore.collection(postsCollection).doc(postId);
+      final data = _fireStore.collection(postsCollection).doc(postId);
 
-      return await _firestore.runTransaction<PostModel>((transaction) async {
+      return await _fireStore.runTransaction<PostModel>((transaction) async {
         final snapshot = await transaction.get(data);
         final post = PostModel.fromJson(snapshot.data()!);
 
@@ -149,9 +149,9 @@ class FeedRemoteDataSourceImpl implements FeedRemoteDataSource {
   @override
   Future<PostModel> unlikePost(String postId, String userId) async {
     try {
-      final data = _firestore.collection(postsCollection).doc(postId);
+      final data = _fireStore.collection(postsCollection).doc(postId);
 
-      return await _firestore.runTransaction<PostModel>((transaction) async {
+      return await _fireStore.runTransaction<PostModel>((transaction) async {
         final snapshot = await transaction.get(data);
         final post = PostModel.fromJson(snapshot.data()!);
 
@@ -175,13 +175,13 @@ class FeedRemoteDataSourceImpl implements FeedRemoteDataSource {
   Future<CommentModel> addComment(CommentModel comment) async {
     try {
 
-      await _firestore
+      await _fireStore
           .collection(commentsCollection)
           .doc(comment.id)
           .set(comment.toJson());
 
-      final postData = _firestore.collection(postsCollection).doc(comment.postId);
-      await _firestore.runTransaction((transaction) async {
+      final postData = _fireStore.collection(postsCollection).doc(comment.postId);
+      await _fireStore.runTransaction((transaction) async {
         final snapshot = await transaction.get(postData);
         final post = PostModel.fromJson(snapshot.data()!);
 
@@ -199,7 +199,7 @@ class FeedRemoteDataSourceImpl implements FeedRemoteDataSource {
   @override
   Future<List<CommentModel>> getComments(String postId) async {
     try {
-      final querySnapshot = await _firestore
+      final querySnapshot = await _fireStore
           .collection(commentsCollection)
           .where('postId', isEqualTo: postId)
           .orderBy('createdAt', descending: false)
@@ -217,7 +217,7 @@ class FeedRemoteDataSourceImpl implements FeedRemoteDataSource {
   Future<void> deleteComment(String commentId) async {
     try {
 
-      final commentDoc = await _firestore
+      final commentDoc = await _fireStore
           .collection(commentsCollection)
           .doc(commentId)
           .get();
@@ -226,10 +226,10 @@ class FeedRemoteDataSourceImpl implements FeedRemoteDataSource {
 
       final comment = CommentModel.fromJson(commentDoc.data()!);
 
-      await _firestore.collection(commentsCollection).doc(commentId).delete();
+      await _fireStore.collection(commentsCollection).doc(commentId).delete();
 
-      final postData = _firestore.collection(postsCollection).doc(comment.postId);
-      await _firestore.runTransaction((transaction) async {
+      final postData = _fireStore.collection(postsCollection).doc(comment.postId);
+      await _fireStore.runTransaction((transaction) async {
         final snapshot = await transaction.get(postData);
         final post = PostModel.fromJson(snapshot.data()!);
 

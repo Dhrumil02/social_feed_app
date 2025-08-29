@@ -1,9 +1,9 @@
-import 'package:feed_app/app/core/routes/app_router.dart';
+import 'package:feed_app/app/core/injection/injection_container.dart';
+import 'package:feed_app/app/core/utils/extensions/theme_extension.dart';
+import 'package:feed_app/app/core/utils/extensions/widget_extensions.dart';
 import 'package:feed_app/app/export.dart';
-import 'package:feed_app/app/features/feed/presentation/bloc/feed_bloc.dart';
-import 'package:feed_app/app/features/feed/presentation/bloc/feed_state.dart';
-import 'package:feed_app/app/features/feed/presentation/screen/widgets/post_card.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:feed_app/app/features/profile/presentation/screen/stat_card.dart';
+import 'package:feed_app/app/shared/widgets/custom_image.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -14,7 +14,21 @@ class ProfileScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: CustomText(AppStrings.profile),
+        leading: BlocBuilder<ThemeCubit, ThemeData>(
+          builder: (ctx, state) {
+            final theme = context.watch<ThemeCubit>().state;
+
+            final isDark = theme.brightness == Brightness.dark;
+
+            return IconButton(
+              onPressed: () {
+                context.read<ThemeCubit>().toggleTheme(!isDark);
+              },
+              icon: Icon(isDark ? Icons.sunny : Icons.dark_mode),
+            );
+          },
+        ),
         actions: [
           IconButton(
             onPressed: () => _showLogoutDialog(context),
@@ -27,96 +41,86 @@ class ProfileScreen extends StatelessWidget {
           final userPosts = state.posts
               .where((post) => post.userId == currentUser?.uid)
               .toList();
-
           return SingleChildScrollView(
             child: Column(
               children: [
-                // Profile Header
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.blue[100],
-                        child: Text(
-                          (currentUser?.email?[0] ?? 'U').toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                Column(
+                  children: [
+                    CircleAvatar(
+                      radius: AppSizes.s50,
+                      backgroundColor: Colors.blue[100],
+                      child: currentUser?.photoURL != null
+                          ? CustomImage(imageUrl: currentUser!.photoURL)
+                          : CustomText(
+                              (currentUser?.email?[0] ?? 'U').toUpperCase(),
+                              style: const TextStyle(
+                                fontSize: AppSizes.s36,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                    ),
+                    AppSizes.vGap16,
+                    CustomText(
+                      currentUser?.email ?? AppStrings.unknownUser,
+                      style: const TextStyle(
+                        fontSize: AppSizes.s18,
+                        fontWeight: FontWeight.bold,
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        currentUser?.email ?? 'Unknown User',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _StatCard(
-                            title: 'Posts',
-                            value: userPosts.length.toString(),
-                          ),
-                          _StatCard(
-                            title: 'Likes',
-                            value: userPosts
-                                .fold(0, (sum, post) => sum + post.likesCount)
-                                .toString(),
-                          ),
-                          _StatCard(
-                            title: 'Comments',
-                            value: userPosts
-                                .fold(0, (sum, post) => sum + post.commentsCount)
-                                .toString(),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                const Divider(),
-
-                // User's Posts
-                if (userPosts.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.all(40),
-                    child: Column(
+                    ),
+                    AppSizes.vGap24,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Icon(
-                          Icons.photo_library_outlined,
-                          size: 60,
-                          color: Colors.grey,
+                        StatCard(
+                          title: AppStrings.post,
+                          value: userPosts.length.toString(),
                         ),
-                        SizedBox(height: 16),
-                        Text(
-                          'No posts yet',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
+                        StatCard(
+                          title: AppStrings.likes,
+                          value: userPosts
+                              .fold(0, (sum, post) => sum + post.likesCount)
+                              .toString(),
+                        ),
+                        StatCard(
+                          title: AppStrings.comments,
+                          value: userPosts
+                              .fold(0, (sum, post) => sum + post.commentsCount)
+                              .toString(),
                         ),
                       ],
                     ),
-                  )
-                else
-                  Column(
-                    children: userPosts.map((post) {
-                      return PostCard(
-                        post: post,
-                        onEdit: () {
-                          context.go(AppRoutes.editPost,extra: post);
+                  ],
+                ).padAll(AppSizes.s20),
 
-                        },
-                      );
-                    }).toList(),
-                  ),
+                const Divider(),
+
+                userPosts.isEmpty
+                    ? Column(
+                        children: [
+                          Icon(
+                            Icons.photo_library_outlined,
+                            size: AppSizes.s60,
+                            color: Colors.grey,
+                          ),
+                          AppSizes.vGap16,
+                          CustomText(
+                            AppStrings.noPostYet,
+                            style: context.bodyMedium.copyWith(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ).padAll(AppSizes.s40)
+                    : Column(
+                        children: userPosts.map((post) {
+                          return PostCard(
+                            post: post,
+                            onEdit: () {
+                              context.push(AppRoutes.editPost, extra: post);
+                            },
+                          );
+                        }).toList(),
+                      ),
               ],
             ),
           );
@@ -129,55 +133,56 @@ class ProfileScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
+        title: CustomText(AppStrings.logout),
+        content: CustomText(AppStrings.areYouSureYouWantToLogout),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: CustomText(AppStrings.cancel),
           ),
           TextButton(
-            onPressed: () {
-
-              FirebaseAuth.instance.signOut();
-              
+            onPressed: () async {
+              Navigator.pop(context); // Close dialog first
+              await _performLogout(context);
             },
-            child: const Text('Logout'),
+            child: CustomText(AppStrings.logout),
           ),
         ],
       ),
     );
   }
-}
 
-class _StatCard extends StatelessWidget {
-  final String title;
-  final String value;
+  Future<void> _performLogout(BuildContext context) async {
+    try {
+      final authService = sl<AuthenticationService>();
+      final sharedPrefService = sl<SharedPreferenceService>();
 
-  const _StatCard({
-    required this.title,
-    required this.value,
-  });
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+      await authService.signOut();
+
+      await sharedPrefService.clearUserData();
+
+      if (context.mounted) {
+        Navigator.pop(context);
+
+        context.go(AppRoutes.signIn);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.pop(context);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: CustomText('Logout failed: ${e.toString()}'),
+            backgroundColor: Colors.red,
           ),
-        ),
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[600],
-          ),
-        ),
-      ],
-    );
+        );
+      }
+    }
   }
 }

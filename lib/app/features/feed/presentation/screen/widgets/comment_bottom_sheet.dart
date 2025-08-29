@@ -1,18 +1,12 @@
 import 'package:feed_app/app/core/utils/extensions/date_extensions.dart';
 import 'package:feed_app/app/export.dart';
 import 'package:feed_app/app/features/feed/domain/entity/comment.dart';
-import 'package:feed_app/app/features/feed/presentation/bloc/feed_bloc.dart';
 import 'package:feed_app/app/features/feed/presentation/bloc/feed_event.dart';
-import 'package:feed_app/app/features/feed/presentation/bloc/feed_state.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class CommentsBottomSheet extends StatefulWidget {
   final String postId;
 
-  const CommentsBottomSheet({
-    super.key,
-    required this.postId,
-  });
+  const CommentsBottomSheet({super.key, required this.postId});
 
   @override
   State<CommentsBottomSheet> createState() => _CommentsBottomSheetState();
@@ -38,25 +32,17 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
       ),
       child: Column(
         children: [
-
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: Spacing.all(AppSizes.s16),
             decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: Colors.grey[300]!,
-                ),
-              ),
+              border: Border(bottom: BorderSide(color: Colors.grey[300]!)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                const CustomText(
                   'Comments',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
@@ -66,16 +52,13 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
             ),
           ),
 
-
           Expanded(
             child: BlocBuilder<FeedBloc, FeedState>(
               builder: (context, state) {
                 final comments = state.comments[widget.postId] ?? [];
 
                 if (comments.isEmpty) {
-                  return const Center(
-                    child: Text('No comments yet'),
-                  );
+                  return const Center(child: CustomText('No comments yet'));
                 }
                 print("comment list ${comments.length}");
 
@@ -96,15 +79,10 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
             ),
           ),
 
-          // Add comment
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: Spacing.all(AppSizes.s16),
             decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: Colors.grey[300]!,
-                ),
-              ),
+              border: Border(top: BorderSide(color: Colors.grey[300]!)),
             ),
             child: Row(
               children: [
@@ -115,14 +93,14 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                       hintText: 'Add a comment...',
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12,
+                        horizontal: AppSizes.s12,
                         vertical: 8,
                       ),
                     ),
                     maxLines: null,
                   ),
                 ),
-                const SizedBox(width: 8),
+                AppSizes.hGap8,
                 IconButton(
                   onPressed: _addComment,
                   icon: const Icon(Icons.send),
@@ -139,15 +117,11 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
     if (_commentController.text.trim().isEmpty) return;
 
     context.read<FeedBloc>().add(
-      AddComment(
-        postId: widget.postId,
-        text: _commentController.text.trim(),
-      ),
+      AddComment(postId: widget.postId, text: _commentController.text.trim()),
     );
 
     _commentController.clear();
 
-    // Scroll to bottom
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
@@ -164,10 +138,7 @@ class _CommentItem extends StatelessWidget {
   final Comment comment;
   final VoidCallback onDelete;
 
-  const _CommentItem({
-    required this.comment,
-    required this.onDelete,
-  });
+  const _CommentItem({required this.comment, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -176,8 +147,8 @@ class _CommentItem extends StatelessWidget {
 
     return ListTile(
       leading: CircleAvatar(
-        radius: 16,
-        child: Text(comment.userEmail[0].toUpperCase()),
+        radius: AppSizes.s16,
+        child: CustomText(comment.userEmail[0].toUpperCase()),
       ),
       title: RichText(
         text: TextSpan(
@@ -192,36 +163,38 @@ class _CommentItem extends StatelessWidget {
           ],
         ),
       ),
-      subtitle: Text(
-          comment.createdAt.timeAgo,
-        style: const TextStyle(fontSize: 12),
+      subtitle: CustomText(
+        comment.createdAt.timeAgo,
+        style: const TextStyle(fontSize: AppSizes.s12),
       ),
       trailing: isOwner
           ? IconButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Delete Comment'),
-              content: const Text('Are you sure you want to delete this comment?'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    onDelete();
-                  },
-                  child: const Text('Delete'),
-                ),
-              ],
-            ),
-          );
-        },
-        icon: const Icon(Icons.delete, size: 18),
-      )
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const CustomText('Delete Comment'),
+                    content: const CustomText(
+                      'Are you sure you want to delete this comment?',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const CustomText('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          onDelete();
+                        },
+                        child: const CustomText('Delete'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              icon: const Icon(Icons.delete, size: 18),
+            )
           : null,
     );
   }

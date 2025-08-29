@@ -3,7 +3,7 @@ import 'package:feed_app/app/export.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class CustomImage extends StatelessWidget {
-  final String imageUrl;
+  final String? imageUrl;
   final double? height;
   final double? width;
   final BoxFit fit;
@@ -18,7 +18,7 @@ class CustomImage extends StatelessWidget {
     this.borderRadius = 0.0,
   });
 
-  bool get isNetworkImage => imageUrl.startsWith('http');
+  bool get isNetworkImage => imageUrl!.startsWith('http');
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class CustomImage extends StatelessWidget {
 
   Widget buildNetworkImage() {
     return CachedNetworkImage(
-      imageUrl: imageUrl,
+      imageUrl: imageUrl!,
       fit: fit,
       imageBuilder: (context, imageProvider) {
         return Container(
@@ -62,7 +62,7 @@ class CustomImage extends StatelessWidget {
   Widget buildAssetImage() {
     return Container(
       decoration: BoxDecoration(
-        image: DecorationImage(image: AssetImage(imageUrl), fit: fit),
+        image: DecorationImage(image: AssetImage(imageUrl!), fit: fit),
       ),
     );
   }

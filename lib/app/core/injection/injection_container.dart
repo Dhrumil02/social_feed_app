@@ -1,30 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:feed_app/app/core/services/authentication_service.dart';
-import 'package:feed_app/app/core/services/firebase_database_service.dart';
-import 'package:feed_app/app/core/services/shared_preference_service.dart';
 import 'package:feed_app/app/export.dart';
-import 'package:feed_app/app/features/auth/data/repository/auth_repository_impl.dart';
-import 'package:feed_app/app/features/auth/domain/repository/auth_repository.dart';
-import 'package:feed_app/app/features/auth/domain/usercase/auth_use_case.dart';
-import 'package:feed_app/app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:feed_app/app/features/bottom_nav/presentation/bloc/bottom_nav_bloc.dart';
-import 'package:feed_app/app/features/feed/data/datasource/feed_remote_datasource.dart';
-import 'package:feed_app/app/features/feed/data/repository/feed_repository_impl.dart';
-import 'package:feed_app/app/features/feed/domain/repository/feed_repository.dart';
-import 'package:feed_app/app/features/feed/domain/usercase/comment_usecases.dart';
-import 'package:feed_app/app/features/feed/domain/usercase/post_usecase.dart';
-import 'package:feed_app/app/features/feed/presentation/bloc/feed_bloc.dart';
-import 'package:feed_app/app/shared/theme/cubit/theme_cubit.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:get_it/get_it.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../network/network_info.dart';
 
 final sl = GetIt.instance;
 
@@ -37,7 +11,6 @@ Future<void> init() async {
   await Hive.openBox('feedApp');
   sl.registerLazySingleton(() => GlobalKey<NavigatorState>());
   sl.registerLazySingleton(() => FirebaseAuth.instance);
-  sl.registerLazySingleton(() => Supabase.instance.client);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
   sl.registerLazySingleton(() => FirebaseStorage.instance);
   sl.registerLazySingleton(() => Connectivity());
@@ -61,7 +34,6 @@ Future<void> init() async {
   );
 */
 
-
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
       authService: sl(),
@@ -72,7 +44,7 @@ Future<void> init() async {
   );
 
   sl.registerFactory(
-        () => FeedBloc(
+    () => FeedBloc(
       createPostUseCase: sl(),
       getPostsUseCase: sl(),
       updatePostUseCase: sl(),
@@ -106,21 +78,13 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetCommentsUseCase(sl()));
   sl.registerLazySingleton(() => DeleteCommentUseCase(sl()));
 
-
-
-
   sl.registerLazySingleton<FeedRepository>(
-        () => FeedRepositoryImpl(
-      remoteDataSource: sl(),
-    ),
+    () => FeedRepositoryImpl(remoteDataSource: sl()),
   );
-
 
   sl.registerLazySingleton<FeedRemoteDataSource>(
-        () => FeedRemoteDataSourceImpl(),
+    () => FeedRemoteDataSourceImpl(),
   );
-
-
 
   sl.registerFactory(
     () => AuthBloc(

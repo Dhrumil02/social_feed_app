@@ -1,3 +1,4 @@
+import 'package:feed_app/app/export.dart';
 import 'package:feed_app/app/features/auth/presentation/screens/mobile_auth_screen.dart';
 import 'package:feed_app/app/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:feed_app/app/features/auth/presentation/screens/sign_up_screen.dart';
@@ -63,15 +64,15 @@ class AppRouter {
               size: 64,
               color: Colors.red,
             ),
-            const SizedBox(height: 16),
-            Text(
+            AppSizes.vGap16,
+            CustomText(
               'Page not found: ',
               style: const TextStyle(fontSize: 18),
             ),
-            const SizedBox(height: 16),
+            AppSizes.vGap16,
             ElevatedButton(
               onPressed: () => context.go('/'),
-              child: const Text('Go Home'),
+              child: const CustomText('Go Home'),
             ),
           ],
         ),

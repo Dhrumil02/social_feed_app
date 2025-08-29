@@ -39,7 +39,7 @@ class CustomTextField extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: Spacing.y(AppSizes.s1),
-      height: height ?? 40,
+      height: height ?? AppSizes.s40,
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,

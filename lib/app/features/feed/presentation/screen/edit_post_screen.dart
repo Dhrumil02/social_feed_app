@@ -1,21 +1,16 @@
 import 'dart:io';
 
-import 'package:feed_app/app/export.dart';
+import 'package:feed_app/app/core/utils/extensions/widget_extensions.dart';
+import 'package:feed_app/app/core/utils/helpers/app_helper.dart';
 import 'package:feed_app/app/export.dart';
 import 'package:feed_app/app/features/feed/domain/entity/post.dart';
-import 'package:feed_app/app/features/feed/presentation/bloc/feed_bloc.dart';
 import 'package:feed_app/app/features/feed/presentation/bloc/feed_event.dart';
-import 'package:feed_app/app/features/feed/presentation/bloc/feed_state.dart';
-import 'package:feed_app/app/features/feed/presentation/screen/widgets/post_card.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditPostScreen extends StatefulWidget {
   final Post post;
 
-  const EditPostScreen({
-    super.key,
-    required this.post,
-  });
+  const EditPostScreen({super.key, required this.post});
 
   @override
   State<EditPostScreen> createState() => _EditPostScreenState();
@@ -43,24 +38,21 @@ class _EditPostScreenState extends State<EditPostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Post'),
+        leading: BackButton(
+          onPressed: () {
+            context.pop();
+          },
+        ),
+        title: CustomText(AppStrings.editPost),
         actions: [
           BlocConsumer<FeedBloc, FeedState>(
             listener: (context, state) {
               if (state.postActionStatus == Status.success) {
-                GoRouter.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Post updated successfully!'),
-                    backgroundColor: Colors.green,
-                  ),
-                );
+                context.pop();
+                AppHelper.showToast(AppStrings.postUpdatedSuccessFully);
               } else if (state.postActionStatus == Status.failure) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.errorMessage ?? 'Failed to update post'),
-                    backgroundColor: Colors.red,
-                  ),
+                AppHelper.showToast(
+                  state.errorMessage ?? 'Failed to update post',
                 );
               }
 
@@ -70,58 +62,62 @@ class _EditPostScreenState extends State<EditPostScreen> {
             },
             builder: (context, state) {
               return TextButton(
-                onPressed: (_captionController.text.trim().isNotEmpty && !_isLoading)
+                onPressed:
+                    (_captionController.text.trim().isNotEmpty && !_isLoading)
                     ? _updatePost
                     : null,
                 child: _isLoading
-                    ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-                    : const Text('Save'),
+                    ? SizedBox(
+                        width: AppSizes.s16,
+                        height: AppSizes.s16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: AppSizes.s2,
+                        ),
+                      )
+                    : CustomText(AppStrings.save),
               );
             },
           ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Current/New Image
             GestureDetector(
               onTap: _pickImage,
               child: Container(
-                height: 300,
+                height: AppSizes.s300,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppSizes.s12),
                   border: Border.all(color: Colors.grey[300]!),
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppSizes.s12),
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
                       _newImage != null
                           ? Image.file(_newImage!, fit: BoxFit.cover)
                           : Image.network(
-                        widget.post.imageUrl,
-                        fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return const Center(child: CircularProgressIndicator());
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Center(child: Icon(Icons.error));
-                        },
-                      ),
+                              widget.post.imageUrl,
+                              fit: BoxFit.cover,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  },
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(child: Icon(Icons.error));
+                              },
+                            ),
                       Positioned(
                         bottom: 8,
                         right: 8,
                         child: Container(
-                          padding: const EdgeInsets.all(8),
+                          padding: Spacing.all(8),
                           decoration: BoxDecoration(
                             color: Colors.black54,
                             borderRadius: BorderRadius.circular(20),
@@ -139,26 +135,24 @@ class _EditPostScreenState extends State<EditPostScreen> {
               ),
             ),
 
-            const SizedBox(height: 24),
+            AppSizes.vGap24,
 
-            // Caption input
             TextField(
               controller: _captionController,
               maxLines: 4,
               decoration: const InputDecoration(
-                labelText: 'Caption',
+                labelText: AppStrings.caption,
                 border: OutlineInputBorder(),
                 alignLabelWithHint: true,
               ),
               onChanged: (_) => setState(() {}),
             ),
 
-            const SizedBox(height: 16),
+            AppSizes.vGap16,
 
-            // Show if image will be updated
             if (_newImage != null)
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: Spacing.all(AppSizes.s12),
                 decoration: BoxDecoration(
                   color: Colors.orange[50],
                   borderRadius: BorderRadius.circular(8),
@@ -167,11 +161,11 @@ class _EditPostScreenState extends State<EditPostScreen> {
                 child: Row(
                   children: [
                     Icon(Icons.info_outline, color: Colors.orange[700]),
-                    const SizedBox(width: 8),
+                    AppSizes.hGap8,
                     const Expanded(
-                      child: Text(
+                      child: CustomText(
                         'New image selected. It will replace the current image.',
-                        style: TextStyle(fontSize: 14),
+                        style: TextStyle(fontSize: AppSizes.s14),
                       ),
                     ),
                     TextButton(
@@ -180,14 +174,14 @@ class _EditPostScreenState extends State<EditPostScreen> {
                           _newImage = null;
                         });
                       },
-                      child: const Text('Cancel'),
+                      child: const CustomText('Cancel'),
                     ),
                   ],
                 ),
               ),
           ],
         ),
-      ),
+      ).padAll(AppSizes.s16),
     );
   }
 
@@ -200,7 +194,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
           children: [
             ListTile(
               leading: const Icon(Icons.photo_camera),
-              title: const Text('Camera'),
+              title: CustomText(AppStrings.camera),
               onTap: () {
                 Navigator.pop(context);
                 _getImage(ImageSource.camera);
@@ -208,7 +202,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.photo_library),
-              title: const Text('Gallery'),
+              title: CustomText(AppStrings.gallery),
               onTap: () {
                 Navigator.pop(context);
                 _getImage(ImageSource.gallery);
@@ -229,12 +223,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to pick image: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      AppHelper.showToast('Failed to pick image: $e');
     }
   }
 

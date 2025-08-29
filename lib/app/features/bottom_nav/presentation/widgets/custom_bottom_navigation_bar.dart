@@ -25,8 +25,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
       ),
       child: SafeArea(
         child: Container(
-          height: 70,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          height: AppSizes.s70,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.s16,
+            vertical: 8,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -58,8 +61,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
     required IconData icon,
     required IconData activeIcon,
     required String label,
-
-
   }) {
     final isActive = currentIndex == index;
     final theme = Theme.of(context);
@@ -69,25 +70,28 @@ class CustomBottomNavigationBar extends StatelessWidget {
       onTap: () => onTap(index),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.s12,
+          vertical: AppSizes.s4,
+        ),
         decoration: BoxDecoration(
           color: isActive ? primaryColor.withOpacity(0.1) : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSizes.s12),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-              Icon(
-                isActive ? activeIcon : icon,
-                color: isActive ? primaryColor : Colors.grey,
-                size: 24,
-              ),
-            const SizedBox(height: 2),
-            Text(
+            Icon(
+              isActive ? activeIcon : icon,
+              color: isActive ? primaryColor : Colors.grey,
+              size: AppSizes.s24,
+            ),
+            AppSizes.vGap2,
+            CustomText(
               label,
               style: TextStyle(
                 color: isActive ? primaryColor : Colors.grey,
-                fontSize: 10,
+                fontSize: AppSizes.s10,
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
@@ -96,6 +100,4 @@ class CustomBottomNavigationBar extends StatelessWidget {
       ),
     );
   }
-
-
 }

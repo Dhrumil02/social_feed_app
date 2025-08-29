@@ -1,11 +1,13 @@
-
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:feed_app/app/core/utils/extensions/text_extensions.dart';
+import 'package:feed_app/app/core/utils/extensions/theme_extension.dart';
+import 'package:feed_app/app/core/utils/extensions/widget_extensions.dart';
+import 'package:feed_app/app/core/utils/helpers/app_helper.dart';
+import 'package:feed_app/app/export.dart';
 import 'package:image_picker/image_picker.dart';
-import '../bloc/feed_bloc.dart';
+
 import '../bloc/feed_event.dart';
-import '../bloc/feed_state.dart';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
@@ -30,31 +32,22 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Post'),
-        leading: BackButton(onPressed: (){
-
-        },),
+        title: const CustomText('Create Post'),
+        leading: BackButton(
+          onPressed: () {
+            context.pop();
+          },
+        ),
         elevation: 0,
         actions: [
           BlocConsumer<FeedBloc, FeedState>(
             listener: (context, state) {
               if (state.postActionStatus == Status.success) {
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Post created successfully!'),
-                    backgroundColor: Colors.green,
-                    duration: Duration(seconds: 2),
-                  ),
-                );
+                context.pop();
+                AppHelper.showToast(AppStrings.postUpdatedSuccessFully);
               } else if (state.postActionStatus == Status.failure) {
-                print("FAILED ${state.errorMessage}");
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.errorMessage ?? 'Failed to create post'),
-                    backgroundColor: Colors.red,
-                    duration: const Duration(seconds: 3),
-                  ),
+                AppHelper.showToast(
+                  state.errorMessage ?? 'Failed to create post',
                 );
               }
 
@@ -63,12 +56,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               });
             },
             builder: (context, state) {
-              final canShare = _selectedImage != null &&
+              final canShare =
+                  _selectedImage != null &&
                   _captionController.text.trim().isNotEmpty &&
                   !_isLoading;
 
               return Padding(
-                padding: const EdgeInsets.only(right: 8.0),
+                padding: Spacing.only(right: AppSizes.s8),
                 child: TextButton(
                   onPressed: canShare ? _createPost : null,
                   style: TextButton.styleFrom(
@@ -77,24 +71,26 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.s16,
+                      vertical: AppSizes.s8,
+                    ),
                   ),
                   child: _isLoading
                       ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
-                      : const Text(
-                    'Share',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
+                          width: AppSizes.s16,
+                          height: AppSizes.s16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                          ),
+                        )
+                      : CustomText(
+                          AppStrings.share,
+                          style: context.bodyMedium.bold,
+                        ),
                 ),
               );
             },
@@ -102,102 +98,105 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Image selection area
             GestureDetector(
               onTap: _isLoading ? null : _pickImage,
               child: Container(
-                height: 300,
+                height: AppSizes.s300,
                 decoration: BoxDecoration(
                   color: Colors.grey[50],
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(AppSizes.s16),
                   border: Border.all(
-                    color: _selectedImage != null ? Colors.blue : Colors.grey[300]!,
+                    color: _selectedImage != null
+                        ? Colors.blue
+                        : Colors.grey[300]!,
                     width: _selectedImage != null ? 2 : 1,
                     style: BorderStyle.solid,
                   ),
                 ),
                 child: _selectedImage != null
                     ? Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(14),
-                      child: Image.file(
-                        _selectedImage!,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity,
-                      ),
-                    ),
-                    if (!_isLoading)
-                      Positioned(
-                        top: 8,
-                        right: 8,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black54,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: IconButton(
-                            onPressed: _pickImage,
-                            icon: const Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                              size: 20,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(AppSizes.s14),
+                            child: Image.file(
+                              _selectedImage!,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
                             ),
                           ),
-                        ),
-                      ),
-                    if (_isLoading)
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black26,
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: const Center(
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        ),
-                      ),
-                  ],
-                )
+                          if (!_isLoading)
+                            Positioned(
+                              top: 8,
+                              right: 8,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.black54,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: IconButton(
+                                  onPressed: _pickImage,
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          if (_isLoading)
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black26,
+                                borderRadius: BorderRadius.circular(
+                                  AppSizes.s14,
+                                ),
+                              ),
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      )
                     : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.add_photo_alternate_outlined,
-                      size: 80,
-                      color: Colors.grey[400],
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Tap to add photo',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w500,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.add_photo_alternate_outlined,
+                            size: 80,
+                            color: Colors.grey[400],
+                          ),
+                          AppSizes.vGap16,
+                          CustomText(
+                            'Tap to add photo',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          AppSizes.vGap8,
+                          CustomText(
+                            'Choose from camera or gallery',
+                            style: TextStyle(
+                              fontSize: AppSizes.s14,
+                              color: Colors.grey[500],
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Choose from camera or gallery',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[500],
-                      ),
-                    ),
-                  ],
-                ),
               ),
             ),
 
-            const SizedBox(height: 24),
+            AppSizes.vGap24,
 
-            // Caption input
             TextField(
               controller: _captionController,
               enabled: !_isLoading,
@@ -207,10 +206,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 labelText: 'Write a caption...',
                 hintText: 'Share what\'s on your mind',
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppSizes.s12),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppSizes.s12),
                   borderSide: const BorderSide(color: Colors.blue, width: 2),
                 ),
                 alignLabelWithHint: true,
@@ -219,19 +218,22 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               onChanged: (_) => setState(() {}),
             ),
 
-            const SizedBox(height: 24),
+            AppSizes.vGap24,
 
-            // Post status indicator
             if (_selectedImage != null || _captionController.text.isNotEmpty)
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: Spacing.all(AppSizes.s12),
                 decoration: BoxDecoration(
-                  color: _selectedImage != null && _captionController.text.trim().isNotEmpty
+                  color:
+                      _selectedImage != null &&
+                          _captionController.text.trim().isNotEmpty
                       ? Colors.green[50]
                       : Colors.orange[50],
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: _selectedImage != null && _captionController.text.trim().isNotEmpty
+                    color:
+                        _selectedImage != null &&
+                            _captionController.text.trim().isNotEmpty
                         ? Colors.green[200]!
                         : Colors.orange[200]!,
                   ),
@@ -239,34 +241,40 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 child: Row(
                   children: [
                     Icon(
-                      _selectedImage != null && _captionController.text.trim().isNotEmpty
+                      _selectedImage != null &&
+                              _captionController.text.trim().isNotEmpty
                           ? Icons.check_circle_outline
                           : Icons.info_outline,
-                      color: _selectedImage != null && _captionController.text.trim().isNotEmpty
+                      color:
+                          _selectedImage != null &&
+                              _captionController.text.trim().isNotEmpty
                           ? Colors.green[700]
                           : Colors.orange[700],
                     ),
-                    const SizedBox(width: 8),
+                    AppSizes.vGap8,
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            _selectedImage != null && _captionController.text.trim().isNotEmpty
+                          CustomText(
+                            _selectedImage != null &&
+                                    _captionController.text.trim().isNotEmpty
                                 ? 'Ready to share!'
                                 : 'Complete your post',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: _selectedImage != null && _captionController.text.trim().isNotEmpty
+                              fontSize: AppSizes.s14,
+                              color:
+                                  _selectedImage != null &&
+                                      _captionController.text.trim().isNotEmpty
                                   ? Colors.green[700]
                                   : Colors.orange[700],
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
+                          AppSizes.vGap16,
+                          CustomText(
                             _getStatusMessage(),
-                            style: const TextStyle(fontSize: 12),
+                            style: context.bodySmall,
                           ),
                         ],
                       ),
@@ -275,10 +283,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 ),
               ),
 
-            const SizedBox(height: 16),
-
+            AppSizes.vGap16,
           ],
-        ),
+        ).padAll(AppSizes.s16),
       ),
     );
   }
@@ -305,27 +312,24 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       ),
       builder: (context) => SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: Spacing.all(AppSizes.s16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 width: 40,
-                height: 4,
+                height: AppSizes.s4,
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              const SizedBox(height: 20),
-              const Text(
+              AppSizes.vGap20,
+              const CustomText(
                 'Select Photo',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 20),
+              AppSizes.vGap20,
               Row(
                 children: [
                   Expanded(
@@ -338,11 +342,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       },
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  AppSizes.hGap16,
                   Expanded(
                     child: _ImageSourceButton(
                       icon: Icons.photo_library,
-                      label: 'Gallery',
+                      label: AppStrings.gallery,
                       onTap: () {
                         Navigator.pop(context);
                         _getImage(ImageSource.gallery);
@@ -352,7 +356,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 ],
               ),
               if (_selectedImage != null) ...[
-                const SizedBox(height: 16),
+                AppSizes.vGap16,
                 SizedBox(
                   width: double.infinity,
                   child: _ImageSourceButton(
@@ -368,7 +372,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   ),
                 ),
               ],
-              const SizedBox(height: 16),
+              AppSizes.vGap16,
             ],
           ),
         ),
@@ -391,21 +395,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to pick image: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      AppHelper.showToast('Failed to pick image: ${e.toString()}');
     }
   }
 
   void _createPost() {
-    if (_selectedImage == null || _captionController.text.trim().isEmpty || _isLoading) {
+    if (_selectedImage == null ||
+        _captionController.text.trim().isEmpty ||
+        _isLoading) {
       return;
     }
 
-    // Hide keyboard
     FocusScope.of(context).unfocus();
 
     context.read<FeedBloc>().add(
@@ -413,44 +413,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         caption: _captionController.text.trim(),
         imageFile: _selectedImage!,
       ),
-    );
-  }
-}
-
-// Helper Widgets
-
-class _GuidelineItem extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  final bool isCompleted;
-
-  const _GuidelineItem({
-    required this.icon,
-    required this.text,
-    required this.isCompleted,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(
-          isCompleted ? Icons.check_circle : icon,
-          color: isCompleted ? Colors.green : Colors.blue[600],
-          size: 18,
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 14,
-              color: isCompleted ? Colors.green[700] : Colors.blue[700],
-              fontWeight: isCompleted ? FontWeight.w500 : FontWeight.normal,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
@@ -474,28 +436,24 @@ class _ImageSourceButton extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppSizes.s12),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+        padding: const EdgeInsets.symmetric(
+          vertical: AppSizes.s16,
+          horizontal: AppSizes.s12,
+        ),
         decoration: BoxDecoration(
           border: Border.all(color: buttonColor.withOpacity(0.3)),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSizes.s12),
           color: buttonColor.withOpacity(0.1),
         ),
         child: Column(
           children: [
-            Icon(
-              icon,
-              color: buttonColor,
-              size: 32,
-            ),
-            const SizedBox(height: 8),
-            Text(
+            Icon(icon, color: buttonColor, size: AppSizes.s32),
+            AppSizes.vGap8,
+            CustomText(
               label,
-              style: TextStyle(
-                color: buttonColor,
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(color: buttonColor, fontWeight: FontWeight.w500),
             ),
           ],
         ),

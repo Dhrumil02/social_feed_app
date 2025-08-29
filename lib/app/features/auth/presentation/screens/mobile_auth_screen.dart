@@ -1,7 +1,7 @@
-
-import 'package:feed_app/app/core/constants/app_strings.dart';
-import 'package:feed_app/app/core/routes/app_router.dart';
+import 'package:feed_app/app/core/constants/app_images.dart';
+import 'package:feed_app/app/core/utils/helpers/app_helper.dart';
 import 'package:feed_app/app/export.dart';
+import 'package:feed_app/app/shared/widgets/custom_image.dart';
 
 class MobileAuthScreen extends StatefulWidget {
   const MobileAuthScreen({super.key});
@@ -10,7 +10,8 @@ class MobileAuthScreen extends StatefulWidget {
   State<MobileAuthScreen> createState() => _MobileAuthScreenState();
 }
 
-class _MobileAuthScreenState extends State<MobileAuthScreen> with ValidationMixin {
+class _MobileAuthScreenState extends State<MobileAuthScreen>
+    with ValidationMixin {
   final _phoneFormKey = GlobalKey<FormState>();
   final _otpFormKey = GlobalKey<FormState>();
   final _mobileController = TextEditingController();
@@ -41,22 +42,25 @@ class _MobileAuthScreenState extends State<MobileAuthScreen> with ValidationMixi
 
   void _verifyOTP() {
     if (_otpFormKey.currentState!.validate() && verificationId != null) {
-      context.read<AuthBloc>().add(VerifyOTPEvent(
-        verificationId: verificationId!,
-        smsCode: _otpController.text.trim(),
-        name: _nameController.text.trim(),
-      ));
+      context.read<AuthBloc>().add(
+        VerifyOTPEvent(
+          verificationId: verificationId!,
+          smsCode: _otpController.text.trim(),
+          name: _nameController.text.trim(),
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Phone Authentication'),
+        backgroundColor: Colors.white,
         leading: IconButton(
-          onPressed: () => context.go('/login'),
-          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go(AppRoutes.signIn),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
         ),
       ),
       body: BlocListener<AuthBloc, AuthState>(
@@ -67,36 +71,32 @@ class _MobileAuthScreenState extends State<MobileAuthScreen> with ValidationMixi
               showOTPField = true;
               showNameField = true;
             });
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('OTP sent to ${state.phoneNumber}'),
-                backgroundColor: Colors.green,
-              ),
-            );
+
+            AppHelper.showToast('OTP sent to ${state.phoneNumber}');
           } else if (state is AuthAuthenticated) {
             context.go(AppRoutes.mainScreen);
           } else if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
-              ),
-            );
+            AppHelper.showToast(state.message);
           }
         },
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: Spacing.all(AppSizes.s24),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Enter Your Phone Number',
+                CustomImage(
+                  imageUrl: AppImages.imgAppLogo,
+                  height: AppSizes.s100,
+                  width: AppSizes.s100,
+                ),
+                AppSizes.vGap16,
+                CustomText(
+                  AppStrings.enterMobileNumber,
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 32),
+                AppSizes.vGap32,
                 Form(
                   key: _phoneFormKey,
                   child: CustomTextField(
@@ -109,12 +109,12 @@ class _MobileAuthScreenState extends State<MobileAuthScreen> with ValidationMixi
                     prefixIcon: const Icon(Icons.phone),
                   ),
                 ),
-                const SizedBox(height: 16),
+                AppSizes.vGap24,
                 if (!showOTPField)
                   BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
                       return CustomButton(
-                        text: 'Send OTP',
+                        text: AppStrings.sendOTP,
                         onPressed: _sendOTP,
                         isLoading: state is AuthLoading,
                         isEnabled: true,
@@ -122,37 +122,37 @@ class _MobileAuthScreenState extends State<MobileAuthScreen> with ValidationMixi
                         fontColor: Colors.white,
                         fontWeight: FontWeight.w600,
                         borderColor: Theme.of(context).primaryColor,
-                        borderRadius: 12,
-                        textSize: 16,
+                        borderRadius: AppSizes.s12,
+                        textSize: AppSizes.s16,
                       );
                     },
                   ),
                 if (showNameField) ...[
-                  const SizedBox(height: 16),
+                  AppSizes.vGap16,
                   CustomTextField(
                     controller: _nameController,
-                    labelText: 'Full Name',
-                    hintText: 'Enter your full name',
+                    labelText: AppStrings.fullName,
+                    hintText: AppStrings.enterFullName,
                     keyboardType: TextInputType.name,
                     validator: validateRequired,
                     prefixIcon: const Icon(Icons.person),
                   ),
                 ],
                 if (showOTPField) ...[
-                  const SizedBox(height: 16),
+                  AppSizes.vGap16,
                   Form(
                     key: _otpFormKey,
                     child: CustomTextField(
                       controller: _otpController,
-                      labelText: 'OTP',
-                      hintText: 'Enter 6-digit OTP',
+                      labelText: AppStrings.sendOTP,
+                      hintText: AppStrings.enterDigitOTP,
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value?.isEmpty ?? true) {
-                          return 'OTP is required';
+                          return AppStrings.otpIsRequired;
                         }
                         if (value!.length != 6) {
-                          return 'OTP must be 6 digits';
+                          return AppStrings.otpMustBe6Digits;
                         }
                         return null;
                       },
@@ -160,26 +160,27 @@ class _MobileAuthScreenState extends State<MobileAuthScreen> with ValidationMixi
                       maxLength: 6,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  AppSizes.vGap16,
                   BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
                       return CustomButton(
-                        text: 'Verify OTP',
+                        text: AppStrings.verifyOTP,
                         onPressed: _verifyOTP,
                         isLoading: state is AuthLoading,
-                        isEnabled: _otpController.text.length == 6 &&
+                        isEnabled:
+                            _otpController.text.length == 6 &&
                             _nameController.text.isNotEmpty &&
-                            !(state is AuthLoading),
+                            state is! AuthLoading,
                         backGroundColor: Theme.of(context).primaryColor,
                         fontColor: Colors.white,
                         fontWeight: FontWeight.w600,
                         borderColor: Theme.of(context).primaryColor,
-                        borderRadius: 12,
-                        textSize: 16,
+                        borderRadius: AppSizes.s12,
+                        textSize: AppSizes.s16,
                       );
                     },
                   ),
-                  const SizedBox(height: 16),
+                  AppSizes.vGap16,
                   TextButton(
                     onPressed: () {
                       setState(() {
@@ -190,7 +191,7 @@ class _MobileAuthScreenState extends State<MobileAuthScreen> with ValidationMixi
                         _nameController.clear();
                       });
                     },
-                    child: const Text('Change Phone Number'),
+                    child: const CustomText(AppStrings.changeMobileNumber),
                   ),
                 ],
               ],

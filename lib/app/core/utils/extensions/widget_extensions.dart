@@ -2,7 +2,7 @@ import 'package:feed_app/app/export.dart';
 
 extension WidgetExtensions on Widget {
   Widget padAll(double padding) {
-    return Padding(padding: EdgeInsets.all(padding), child: this);
+    return Padding(padding: Spacing.all(padding), child: this);
   }
 
   Widget get center => Center(child: this);

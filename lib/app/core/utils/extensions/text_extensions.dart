@@ -13,7 +13,6 @@ extension TextExtensions on TextStyle {
 
   TextStyle get bold => copyWith(fontWeight: FontWeight.w700);
 
-
   TextStyle size(double value) => copyWith(fontSize: value);
 
   TextStyle color(Color value) => copyWith(color: value);

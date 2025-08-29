@@ -27,7 +27,6 @@ class CreatePostUseCase {
   }
 }
 
-
 class GetPostsUseCase {
   final FeedRepository repository;
 

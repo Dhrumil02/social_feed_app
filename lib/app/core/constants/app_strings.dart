@@ -4,10 +4,14 @@ class AppStrings{
   static const signup = "Sign Up";
   static const logout = "Logout";
   static const email = "Email";
+  static const fullName = "Full Name";
+  static const enterFullName = "Enter Full Name";
   static const password = "Password";
+  static const continueWithGoogle = "Sign-In With Google";
+  static const continueWithApple = "Sign-In With Apple";
   static const confirmPassword = "Confirm Password";
   static const phone = "Mobile Number";
-  static const forgotPassword = "Forgot Password?";
+  static const loginWithMobile = "LogIn With Mobile";
   static const resetPassword = "Reset Password";
   static const createAccount = "Create Account";
   static const orContinueWith = "Or continue with";
@@ -16,7 +20,18 @@ class AppStrings{
   static const appleSignIn = "Sign in with Apple";
   static const enterMobileNumber = "Enter Mobile Number";
   static const mobileNumber = "Mobile Number";
+  static const sendOTP = "Send OTP";
+  static const verifyOTP = "verifyOTP";
+  static const changeMobileNumber = "Change Mobile Number";
+  static const otpIsRequired = "OTP is required";
+  static const otpMustBe6Digits = "OTP must be 6 digits";
+  static const tapToAddPhoto = "Tap to add photo";
+  static const otp = "OTP";
+  static const enterDigitOTP = "Enter 6-digit OTP";
+  static const share = "Share";
   static const failedToUploadPost = "Failed to update post";
+  static const editPost = "Edit Post";
+  static const welcomeBack = "Welcome Back";
 
 
   static const home = "Home";
@@ -24,9 +39,12 @@ class AppStrings{
   static const posts = "Posts";
   static const noPosts = "No posts yet";
   static const newPost = "New Post";
+  static const caption = "Caption";
   static const writeCaption = "Write a caption...";
   static const uploadImage = "Upload Image";
   static const post = "Post";
+  static const failedToUpdatePost = "Failed to update post";
+  static const postUpdatedSuccessFully = "Post updated successfully!";
   static const posting = "Posting...";
   static const like = "Like";
   static const unlike = "Unlike";
@@ -41,7 +59,10 @@ class AppStrings{
   static const bio = "Bio";
   static const save = "Save";
   static const cancel = "Cancel";
+  static const noPostYet = "No posts yet";
+  static const unknownUser = "Unknown User";
   static const settings = "Settings";
+  static const areYouSureYouWantToLogout = "Are you sure you want to logout?";
 
   static const required = 'This field is required';
   static const minLength = 'Input is too short';
@@ -61,4 +82,5 @@ class AppStrings{
   static const tapToSelectImage = 'Tap to select an image';
   static const photoLibrary = 'Photo Library';
   static const camera = 'Camera';
+  static const gallery = 'Gallery';
 }

@@ -10,7 +10,7 @@ class AppHelper {
       timeInSecForIosWeb: 1,
       backgroundColor: AppColors.backgroundDark,
       textColor: Colors.white,
-      fontSize: 16.0,
+      fontSize: AppSizes.s16,
     );
   }
 }

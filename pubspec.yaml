@@ -54,9 +54,6 @@ dependencies:
   firebase_app_check: ^0.4.0
   recaptcha_enterprise_flutter: ^18.7.1
 
-  #for image storage
-  supabase_flutter: ^2.10.0
-
   #path
   path: ^1.9.1
 

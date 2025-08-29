@@ -45,7 +45,7 @@ class CustomButton extends StatelessWidget {
                 ),
               ),
               minimumSize: WidgetStateProperty.all<Size>(
-                Size.fromHeight(height ?? 40),
+                Size.fromHeight(height ?? AppSizes.s40),
               ),
               backgroundColor: WidgetStateProperty.all<Color>(
                 Colors.grey.shade400,
@@ -189,7 +189,7 @@ class CustomIconTextButton extends StatelessWidget {
                     width: AppSizes.s20,
                     color: fontColor,
                   ),
-                  SizedBox(width: AppSizes.s8),
+                  AppSizes.hGap8,
                 ],
                 if (text != null)
                   CustomText(
@@ -199,7 +199,7 @@ class CustomIconTextButton extends StatelessWidget {
                     color: fontColor,
                   ),
                 if (svgIcon != null && iconRight) ...[
-                  SizedBox(width: AppSizes.s8),
+                  AppSizes.hGap8,
                   SvgPicture.asset(
                     svgIcon!,
                     height: AppSizes.s20,
