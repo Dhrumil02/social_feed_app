@@ -42,14 +42,6 @@ A feed application built with Flutter, implementing modern architectural pattern
 **State Management**
 - Flutter BLoC for predictable state management
 - Equatable for value equality
-- Stream-based reactive programming
-
-## CI/CD Pipeline
-
-A minimal CI/CD pipeline has been integrated for automated build generation. The pipeline is configured to:
-- Trigger builds on code changes
-- Generate APK/IPA files for testing
-- Basic build validation
 
 ## Testing
 
@@ -80,11 +72,18 @@ flutter pub get
 3. Firebase Configuration
    - Create a new Firebase project
    - Enable Authentication, Firestore, and Storage services
+   - Add SHA fingerprints for authentication required for Authentication :
+
+   Generate SHA-1 and SHA-256 fingerprints using keytool or Android Studio
+   Add fingerprints to your Firebase project settings
+
+   Setup Guideline : https://firebase.google.com/docs/flutter/setup
+
    - Download configuration files:
       - `google-services.json` for Android (place in `android/app/`)
       - `GoogleService-Info.plist` for iOS (place in `ios/Runner/`)
 
-4. Run the application
+3. Run the application
 ```bash
 flutter run
 ```
@@ -132,7 +131,7 @@ Apple Sign-In functionality is implemented but requires an active Apple Develope
 - Widget test implementation
 
 **In Progress**
-- Phone authentication testing (pending Firebase configuration)
+- Phone authentication testing (known issue due to play integrity)
 - Apple Sign-In testing (pending Apple Developer account)
 - Source of Issue: https://docs.google.com/document/d/1nbUkaCzv2aw7aqzQjF10JRaXIiTr1aFKxtJnRt9gztg/edit?usp=sharing
 - UI/UX enhancements
