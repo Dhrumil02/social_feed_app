@@ -147,5 +147,13 @@ Apple Sign-In functionality is implemented but requires an active Apple Develope
 - https://drive.google.com/file/d/1YDYIjOIswInvowCJvl40F6kTFhxKnrge/view?usp=sharing
 
 **Screenshots**
-https://raw.github.com/Dhrumil02/social_feed_app/main/Screenshot_20250830_061520.jpg
-https://github.com/Dhrumil02/social_feed_app/blob/main/screenshots/Screenshot_20250830_061520.jpg
+<div align="center">
+  <img src="screenshots/Screenshot_20250830_061520.jpg" width="200" alt="Login Screen" />
+  <img src="screenshots/Screenshot_20250830_061535.jpg" width="200" alt="Feed Screen" />
+  <img src="screenshots/Screenshot_20250830_061552.jpg" width="200" alt="Create Post" />
+  <img src="screenshots/Screenshot_20250830_061641.jpg" width="200" alt="Profile Screen" />
+</div>
+<div align="center">
+  <img src="screenshots/Screenshot_20250830_061646.jpg" width="200" alt="Dark Theme" />
+  <img src="screenshots/Screenshot_20250830_061650.jpg" width="200" alt="Settings Screen" />
+</div>
