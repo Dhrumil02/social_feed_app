@@ -2,21 +2,6 @@
 
 A feed application built with Flutter, implementing modern architectural patterns and user interaction features.
 
-# Feed App
-
-A feed application built with Flutter, implementing modern architectural patterns and user interaction features.
-
-## Download & Demo
-
-**Download App**
-- [APK] https://drive.google.com/file/d/14ZOqqj5GZOoI-UzovpgDFpyGy3YyBQ7-/view?usp=sharing - Download for Android devices
-
-**Demo Video**
-- [Demo Video] https://drive.google.com/file/d/1YDYIjOIswInvowCJvl40F6kTFhxKnrge/view?usp=sharing
-
-**Screenshots**
-
-
 ## Core Functionality
 
 **Authentication**
@@ -152,3 +137,13 @@ Apple Sign-In functionality is implemented but requires an active Apple Develope
 - Source of Issue: https://docs.google.com/document/d/1nbUkaCzv2aw7aqzQjF10JRaXIiTr1aFKxtJnRt9gztg/edit?usp=sharing
 - UI/UX enhancements
 - Performance optimizations
+
+## Download & Demo
+
+**Download App**
+- https://drive.google.com/file/d/14ZOqqj5GZOoI-UzovpgDFpyGy3YyBQ7-/view?usp=sharing - Download for Android devices
+
+**Demo Video**
+- https://drive.google.com/file/d/1YDYIjOIswInvowCJvl40F6kTFhxKnrge/view?usp=sharing
+
+**Screenshots**
