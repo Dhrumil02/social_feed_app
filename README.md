@@ -1,6 +1,6 @@
 # Feed App
 
-A feed application built with Flutter, implementing modern architectural patterns and user interaction features.
+A feed application for adding post with images and caption with like and comment functionality
 
 ## Core Functionality
 
