@@ -24,32 +24,21 @@ A feed application built with Flutter, implementing modern architectural pattern
 - Dark theme and multi-color theming support
 - Offline caching
 
-## Technology Stack
+## Tech Stack
 
 **Architecture**
-- Clean Architecture with distinct layers
-- BLoC Pattern for state management
-- Repository Pattern for data abstraction
-
+- Clean Architecture
+- Flutter BLoC for state management
+  
 **Database & Storage**
 - Firebase Firestore for posts, comments, and user data
 - Firebase Cloud Storage for media files
 - Hive Database for local caching
-
-**Authentication**
 - Firebase Authentication with multiple sign-in methods
-
-**State Management**
-- Flutter BLoC for predictable state management
-- Equatable for value equality
-
-## Testing
-
-The project includes a widget test implemented for testing purposes, demonstrating the testing framework setup and serving as a foundation for expanding test coverage.
 
 ## Project Setup
 
-**Prerequisites**
+**Required**
 - Flutter SDK (Channel stable, 3.32.8 or higher)
 - Dart SDK
 - Firebase project setup
@@ -60,7 +49,7 @@ The project includes a widget test implemented for testing purposes, demonstrati
 
 1. Clone the repository
 ```bash
-git clone [repository-url]
+git clone https://github.com/Dhrumil02/social_feed_app.git
 cd social-media-app
 ```
 
@@ -90,21 +79,19 @@ flutter run
 
 ## Architecture Decisions
 
-**State Management Choice: BLoC Pattern**
+**State Management : BLoC **
 
-The application uses the BLoC for state management, for:
+The application uses the BLoC for state management for:
 - Separation : clear differentiation between UI and business logic
-- Testability - Easy testing of business logic
+- Easy testing of business logic
 - Unidirectional data flow
 
 **Data Storage Strategy**
 - Remote Database: Firebase Firestore for real-time synchronization
-- Local Database: Hive database for offline support and improved performance
+- Local Database: Hive database for offline support
 - Image Storage: Firebase Cloud Storage for scalable media handling
 
 **Clean Architecture Implementation**
-
-The project follows Clean Architecture principles:
 - Domain Layer: Contains business entities and use cases and implementation of repositories
 - Data Layer: Handles data sources and repositories
 - Presentation Layer: Manages UI and state presentation
@@ -122,7 +109,7 @@ Apple Sign-In functionality is implemented but requires an active Apple Develope
 **Completed**
 - User authentication (Google, Email/Password)
 - Post creation, editing, and deletion
-- Feed listing with infinite scroll
+- Feed listing
 - Like and comment system
 - Dark theme and multi-color theming
 - Local caching with Hive
