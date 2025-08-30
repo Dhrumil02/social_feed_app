@@ -4,6 +4,7 @@ import 'package:feed_app/firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +24,10 @@ void main() async {
     );
   }
 
-    print("TOKEN ${FirebaseAppCheck.instance.getToken()}");
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,

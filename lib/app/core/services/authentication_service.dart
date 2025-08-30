@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:feed_app/app/core/injection/injection_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -46,13 +47,17 @@ class AuthenticationService {
           await _auth.signInWithCredential(credential);
           completer.complete();
         } catch (e) {
-          print('FIrebase Auth Exception111 ${e}');
+          if(kDebugMode){
+            print('FIrebase Auth Exception111 ${e}');
+          }
 
           completer.completeError(e);
         }
       },
       verificationFailed: (FirebaseAuthException e) {
-        print('Firebase Auth Exception $e');
+        if(kDebugMode){
+          print('Firebase Auth Exception $e');
+        }
         completer.completeError(e);
       },
       codeSent: (String verificationId, int? resendToken) {
